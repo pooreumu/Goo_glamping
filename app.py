@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import config
+import jwt
+import datetime
 import hashlib
 app = Flask(__name__)
 
@@ -7,9 +9,11 @@ from pymongo import MongoClient
 client = MongoClient(config.Mongo_key)
 db = client.dbsparta
 
+SECRET_KEY = config.SECRET_KEY
+
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 @app.route('/signup')
 def sign_up():
@@ -38,6 +42,29 @@ def sign_up_idcheck():
         return jsonify({'result': 'fail', 'msg': '중복된 아이디가 존재합니다.'})
     elif result is None:
         return jsonify({'result': 'success', 'msg': '아이디 중복체크완료!'})
+
+### login api #####
+@app.route('/sign_in', methods=['POST'])  # 로그인 API
+def sign_in():
+    id_receive = request.form['give_id']
+    pw_receive = request.form['give_pw']
+    pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()  # 패스워드 암호화
+
+    result = db.users.find_one({'user_id': id_receive, 'pw': pw_hash})  # 동일한 유저가 있는지 확인
+
+    if result is not None:  # 동일한 유저가 없는게 아니면, = 동일한 유저가 있으면,
+        payload = {
+            'id': id_receive,
+            'exp': datetime.utcnow() + datetime.timedelta(seconds=60 * 60 * 24)
+        }
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')  # 토큰을 건내줌.
+
+        return jsonify({'result': 'success', 'token': token})
+    else:  # 동일한 유저가 없으면,
+        return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
+
+
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+    <title>구글램핑</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/icon3.png">
+
+    <style>
+        body{
+            margin: 0;
+        }
+        .main{
+            background-size: cover;
+            background-image: url("https://yaimg.yanolja.com/v5/2020/04/15/17/1280/5e96cb0faea6f1.06139027.JPG");
+
+            width: 100vw;
+            height: 100vh;
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .title{
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .login_box{
+            width: 400px;
+            height: 350px;
+
+            background-color: white;
+            background-color: rgba( 255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 5px;
+            }
+        .box > span {
+            margin-bottom: 20px;
+        }
+        .control {
+            width: 230px;
+        }
+        .main > img {
+            left: 5%;
+        }
+    </style>
+    <script>
+        $(document).ready(function (){
+            hide() //로그인 박스 숨김
+        });
+        function hide(){
+            $('#login_box').toggle();
+        };
+        function login() {
+            $('#login_box').show();
+            $('#title').toggle();
+        };
+        function sign_in() {
+            let id = $("#id").val();
+            let pw = $("#pw").val();
+
+            if (id =="" || pw == "") { //아이디와 패스워드 중 하나라도 빈칸이면,
+                $('#id_none').text("아이디/패스워드를 입력해주세요.")
+                $("#id").focus()
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/sign_in",
+                    data: {give_id: id, give_pw: pw},
+                    success: function (response) {
+                        alert(response["msg"])
+                        if (response['result'] == 'success') {
+                            $.cookie('mytoken', response['token'], {path: '/'}); //쿠키를 키 벨류 형식으로 건내줌
+                            alert( id + '님 반갑습니다!') //누구누구님 반갑습니다 ! 호출
+                            window.location.href = '/main' //메인페이지로 이동
+                        } else {
+                            alert(response['msg'])
+                        }
+                    }
+                })
+            }
+        };
+    </script>
+
+</head>
+<body>
+    <div class="main">
+        <div class="title" id="title">
+            <h1 style="font-size:1em">Welcome to 구글램핑</h1>
+            <a onclick="login()" style="color: white; font-size: 0.6em; margin-top: 1.5em">시작하기⛺</a>
+        </div>
+        <div class="login_box" id="login_box">
+                <span style="font-size:1.8em; color:green; font-weight:1000; margin-bottom: 30px;">로그인</span>
+                <div class="field">
+                    <div class="control">
+                        <input id="id" class="input" type="text" placeholder="아이디를 입력해주세요">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input id="pw" class="input" type="password" placeholder="비밀번호를 입력해주세요">
+                    </div>
+                    <p id="id_none" style="color: red;font-size:4px"></p>
+                </div>
+                <div style="margin-top: 10px">
+                    <button onclick="window.location.href='/signup'" class="button is-primary"
+                            style="margin-right: 30px;">회원가입
+                    </button>
+                    <button onclick="sign_in()" class="button is-primary">로그인</button>
+                </div>
+        </div>
+    </div>
+
+</body>
+</html>
