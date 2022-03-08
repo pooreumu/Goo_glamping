@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <title>Goo-글램핑 :: 리뷰 목록</title>
+    <link rel="stylesheet" href="/static/css/reveiw_list.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        .mytitle {
+            width: 100%;
+            height: 230px;
+
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://search.pstatic.net/common/?autoRotate=true&amp;quality=95&amp;type=w750&amp;src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20211125_181%2F1637806739989JTe1a_JPEG%2Fimage.jpg');
+            background-position: center;
+            background-size: cover;
+
+            color: white;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+
+        }
+
+        .logout_btn {
+            width: 130px;
+            height: 40px;
+
+            background-color: transparent;
+            color: white;
+
+            position: absolute;
+            right: 2%;
+            top: 1%;
+
+            border-radius: 10px;
+            border: 1px solid white;
+
+            margin-top: 10px;
+        }
+
+        .mytitle > button:hover {
+            border: 2px solid white;
+        }
+
+        .carousel-box {
+            width: 95%;
+            margin: 50px auto 30px auto;
+        }
+
+        .mycomment {
+            color: gray;
+        }
+
+        .mycards {
+            margin: 20px auto 30px auto;
+            width: 95%;
+            max-width: 1200px;
+        }
+
+        .review_post {
+            width: 95%;
+            max-width: 500px;
+            margin: auto auto 50px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px gray;
+
+            display: none;
+        }
+
+        .mybtns {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            margin-top: 20px;
+        }
+
+        .mybtns > button {
+            margin-right: 10px;
+        }
+    </style>
+
+    <script>
+        function open_box() {
+            $('#review-box').show()
+        }
+
+        function close_box() {
+            $('#review-box').hide()
+        }
+    </script>
+</head>
+
+<body>
+<!-- 윗 배너 -->
+<div class="mytitle">
+    <button class="logout_btn" onclick="">로그아웃</button>
+    <img src="/static/image/Goo-글램핑 logo.png" alr="로고이미지">
+    <!--    <button onclick="open_box()">내가 다녀온 글램핑<p>리뷰 쓰기</p></button>-->
+</div>
+
+<!-- 슬라이드 배너 -->
+<div class="carousel-box">
+    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"
+                    aria-current="true"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"
+                    class=""></button>
+            <!--      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>-->
+        </div>
+        <div class="carousel-inner">
+
+            <!-- carousel 첫번째 배너 -->
+            <div class="carousel-item active">
+                <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg"
+                     aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <rect width="100%" height="100%" fill="#777"></rect>
+                </svg>
+                <div class="container">
+                    <div class="carousel-caption text-start">
+                        <div class="btn1">
+                            <p><a class="btn btn-lg btn-success" onclick="open_box()">글램핑 리뷰 쓰기</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- carousel 두번째 배너 -->
+            <div class="carousel-item">
+                <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg"
+                     aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <rect width="100%" height="100%" fill="#777"></rect>
+                </svg>
+                <div class="container">
+                    <div class="carousel-caption text-end">
+                        <p><a class="btn btn-lg btn-success" href="#">인기 글램핑 명소 보기</a></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- carousel 세번째 배너 -->
+            <!--        <div class="carousel-item">-->
+            <!--            <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg"-->
+            <!--                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">-->
+            <!--                <rect width="100%" height="100%" fill="#777"></rect>-->
+            <!--            </svg>-->
+            <!--            <div class="container">-->
+            <!--                <div class="carousel-caption text-end">-->
+            <!--                    <p><a class="btn btn-lg btn-light" href="#">홈으로</a></p>-->
+            <!--                </div>-->
+            <!--            </div>-->
+            <!--      </div>-->
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
+<!-- 리뷰 등록 창 (임시) -->
+<div class="review_post" id="review-box">
+    <div class="form-floating mb-3">
+        <input id="title" type="email" class="form-control" placeholder="글램핑장명">
+        <label>글램핑 장소명</label>
+        <input id="address" type="email" class="form-control" placeholder="주소명">
+    </div>
+    <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">별점</label>
+        <select class="form-select" id="star">
+            <option selected>-- 선택하기 --</option>
+            <option value="1">⭐</option>
+            <option value="2">⭐⭐</option>
+            <option value="3">⭐⭐⭐</option>
+            <option value="4">⭐⭐⭐⭐</option>
+            <option value="5">⭐⭐⭐⭐⭐</option>
+        </select>
+    </div>
+    <div class="form-floating">
+        <textarea id="review" class="form-control" placeholder="Leave a comment here"></textarea>
+        <label for="floatingTextarea2">자유롭게 리뷰를 써주세요!</label>
+    </div>
+    <div class="mybtns">
+        <button type="button" class="btn btn-dark">등록하기</button>
+        <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+    </div>
+</div>
+
+<!-- 리뷰 리스트 -->
+<div class="mycards">
+    <div class="row row-cols-1 row-cols-md-3 g-4" id="cards-box">
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20200317_145%2F1584439135113Kw1i5_JPEG%2F9EWR-H8oor6T-bS7gjAped-B.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">캠핑장 장소명</h5>
+                    <p class="card-text">주소</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">리뷰 내용</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20210224_121%2F1614138839456YPUDl_JPEG%2FmXErGPgsbMbn-SSylOnwIGJP.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">캠핑장 장소명</h5>
+                    <p class="card-text">주소</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">리뷰 내용</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220209_10%2F1644414196880GilRo_JPEG%2FKakaoTalk_20220209_223055526.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">캠핑장 장소명</h5>
+                    <p class="card-text">주소</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">리뷰 내용</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220209_10%2F1644414196880GilRo_JPEG%2FKakaoTalk_20220209_223055526.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">캠핑장 장소명</h5>
+                    <p class="card-text">주소</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">리뷰 내용</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100">
+                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20200317_145%2F1584439135113Kw1i5_JPEG%2F9EWR-H8oor6T-bS7gjAped-B.jpg"
+                     class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">캠핑장 장소명</h5>
+                    <p class="card-text">주소</p>
+                    <p>⭐⭐⭐</p>
+                    <p class="mycomment">리뷰 내용</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
