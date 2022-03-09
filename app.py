@@ -96,22 +96,24 @@ def review_post():
     review_receive = request.form['review_give']
 
     doc = {
+
         'title':title_receive,
         'loc':loc_receive,
         'star':star_receive,
         'review':review_receive
+
     }
 
     db.reviews.insert_one(doc)
 
-    return jsonify({'msg':'저장완료!'})
+    return jsonify({'msg': '저장완료!'})
+
 
 
 @app.route('/main/get', methods=['GET'])
 def review_get():
     review_list = list(db.reviews.find({}, {'_id': False}))
-    return jsonify({'reviews':review_list})
-
+    return jsonify({'reviews': review_list})
 
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
