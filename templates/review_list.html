@@ -16,8 +16,11 @@
 
     <title>Goo-글램핑 :: 리뷰 목록</title>
 
-    <link rel="stylesheet" href="/static/css/reveiw_list.css">
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+        <!--    sweetalert2-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.css">
+
 
     <style>
         * {
@@ -116,14 +119,30 @@
             let loc = $('#loc').val()
             let star = $('#star').val()
             let review = $('#review').val()
+            let file = $('#input-pic')[0].files[0]
+            let form_data = new FormData()
+            form_data.append("file_give", file)
+            form_data.append("title_give", title)
+            form_data.append("loc_give", loc)
+            form_data.append("star_give", star)
+            form_data.append("review_give", review)
+            console.log(file, title, loc, star, review)
 
             $.ajax({
-                type: 'POST',
-                url: '/main/post',
-                data: {title_give:title, loc_give:loc, star_give:star, review_give:review},
+                type: "POST",
+                url: "/main/post",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
                 success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload()
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'success',
+                        text: response['msg'],
+                    }).then(function () {
+                        location.reload()
+                    })
                 }
             })
         }
@@ -144,11 +163,13 @@
                         let loc = rows[i]['loc']
                         let star = rows[i]['star']
                         let review = rows[i]['review']
+                        let file = rows[i]['img_file']
 
                         let star_image = '⭐'.repeat(star)
 
                         let temp_html = `<div class="col">
                                             <div class="card h-100">
+                                     <img class="is-rounded" src="/static/upload/${file}">
                                                 <div class="card-body">
                                                     <h5 class="card-title">${title}</h5>
                                                     <p class="card-text">${loc}</p>
@@ -161,13 +182,17 @@
                     }
                 }
             })
-
          }
 
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
-            alert('로그아웃!')
-            window.location.href = "/"
+            return Swal.fire({
+                icon: 'success',
+                title: 'success',
+                text: '로그아웃',
+            }).then(function () {
+                location.href = '/'
+            })
         }
 
 
@@ -276,7 +301,11 @@
             <input class="form-control" type="file" id="formFile">
         </div>
     </div>
-
+    <input id="input-pic" class="file-input" type="file" name="resume">
+                                                        <span class="file-cta"><span class="file-icon"><i
+                                                                class="fa fa-upload"></i></span>
+                                                    <span class="file-label">파일 선택</span>
+                                                </span>
     <div class="form-floating">
         <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">리뷰란</label>
