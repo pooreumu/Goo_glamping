@@ -11,6 +11,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <title>Title</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/icon3.png">
 
     <style>
         .top10-title {
@@ -66,49 +67,96 @@
             cursor: pointer;
         }
     </style>
+    <script>
+        $(document).ready(function () {
+            show_top10();
+        });
+
+        function show_top10() {
+            $.ajax({
+                type: 'GET',
+                url: '/top10/api',
+                data: {},
+                success: function (response) {
+                    console.log(response)
+                    let rows = response['top10']
+                    console.log(rows)
+                    for (let i = 0; i < rows.length; i++) {
+                        let title = rows[i]['title']
+                        console.log(title)
+                        let img1 = rows[i]['img1']
+                        console.log(img1)
+                        let img2 = rows[i]['img2']
+                        console.log(img2)
+                        let img3 = rows[i]['img3']
+                        console.log(img3)
+                        let homepage = rows[i]['homepage']
+                        console.log(homepage)
+
+                        let temp_html = `<div class="card-box">
+                                            <div class="card" onclick="location.href='${homepage}'">
+                                                <img src="${img1}" class="card-img-top" alt="홈페이지로 연결">
+                                                <img src="${img2}" class="card-img-top" alt="홈페이지로 연결">
+                                                <img src="${img3}" class="card-img-top" alt="홈페이지로 연결">
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text" onclick="location.href='${homepage}'">${title}</p>
+                                            </div>
+                                        </div>`
+
+                        $('#card-boxes').append(temp_html)
+                    }
+
+                }
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="top10-title">
         top10
     </div>
-    <div class="card-box">
-        <div class="card" onclick="location.href='https://bookhansan.campingt.me/'">
-            <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_38%2F1646023671778ybuLr_JPEG%2Fimage.jpg"
-                 class="card-img-top" alt="홈페이지로 연결">
-            <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_21%2F1646023672058TmbtO_JPEG%2Fimage.jpg"
-                 class="card-img-top" alt="홈페이지로 연결">
-            <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_53%2F1646023672331SD8YW_JPEG%2Fimage.jpg"
-                 class="card-img-top" alt="홈페이지로 연결">
-        </div>
-        <div class="card-body">
-            <p class="card-text" onclick="location.href='https://bookhansan.campingt.me/'">서울북한산럭셔리카라반&수영장글램핑</p>
-        </div>
+    <div id="card-boxes">
+<!--        <div class="card-box">-->
+<!--            <div class="card" onclick="location.href='https://bookhansan.campingt.me/'">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_38%2F1646023671778ybuLr_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_21%2F1646023672058TmbtO_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_53%2F1646023672331SD8YW_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--            </div>-->
+<!--            <div class="card-body">-->
+<!--                <p class="card-text" onclick="location.href='https://bookhansan.campingt.me/'">서울북한산럭셔리카라반&수영장글램핑</p>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="card-box">-->
+<!--            <div class="card" onclick="location.href='https://bookhansan.campingt.me/'">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_38%2F1646023671778ybuLr_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_21%2F1646023672058TmbtO_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_53%2F1646023672331SD8YW_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--            </div>-->
+<!--            <div class="card-body">-->
+<!--                <p class="card-text" onclick="location.href='https://bookhansan.campingt.me/'">서울북한산럭셔리카라반&수영장글램핑</p>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="card-box">-->
+<!--            <div class="card" onclick="location.href='https://bookhansan.campingt.me/'">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_38%2F1646023671778ybuLr_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_21%2F1646023672058TmbtO_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_53%2F1646023672331SD8YW_JPEG%2Fimage.jpg"-->
+<!--                     class="card-img-top" alt="홈페이지로 연결">-->
+<!--            </div>-->
+<!--            <div class="card-body">-->
+<!--                <p class="card-text" onclick="location.href='https://bookhansan.campingt.me/'">서울북한산럭셔리카라반&수영장글램핑</p>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
-    <div class="card-box">
-            <div class="card" onclick="location.href='https://bookhansan.campingt.me/'">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_38%2F1646023671778ybuLr_JPEG%2Fimage.jpg"
-                     class="card-img-top" alt="홈페이지로 연결">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_21%2F1646023672058TmbtO_JPEG%2Fimage.jpg"
-                     class="card-img-top" alt="홈페이지로 연결">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_53%2F1646023672331SD8YW_JPEG%2Fimage.jpg"
-                     class="card-img-top" alt="홈페이지로 연결">
-            </div>
-            <div class="card-body">
-                <p class="card-text" onclick="location.href='https://bookhansan.campingt.me/'">서울북한산럭셔리카라반&수영장글램핑</p>
-            </div>
-        </div>
-    <div class="card-box">
-            <div class="card" onclick="location.href='https://bookhansan.campingt.me/'">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_38%2F1646023671778ybuLr_JPEG%2Fimage.jpg"
-                     class="card-img-top" alt="홈페이지로 연결">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_21%2F1646023672058TmbtO_JPEG%2Fimage.jpg"
-                     class="card-img-top" alt="홈페이지로 연결">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&type=w278_sharpen&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220228_53%2F1646023672331SD8YW_JPEG%2Fimage.jpg"
-                     class="card-img-top" alt="홈페이지로 연결">
-            </div>
-            <div class="card-body">
-                <p class="card-text" onclick="location.href='https://bookhansan.campingt.me/'">서울북한산럭셔리카라반&수영장글램핑</p>
-            </div>
-        </div>
+
 </body>
 </html>

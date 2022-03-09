@@ -1,7 +1,12 @@
 from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
+import config
 from selenium.webdriver.common.keys import Keys
+
+from pymongo import MongoClient
+client = MongoClient(config.Mongo_key)
+db = client.dbsparta
 
 driver = webdriver.Chrome('./chromedriver')  # 드라이버를 실행합니다.
 
@@ -56,6 +61,7 @@ for a in list:
         'img3': img3,
         'homepage': homepage
     }
+    db.top10.insert_one(doc)
     print(doc)
 
 driver.quit()

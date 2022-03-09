@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import config
 import jwt
-from datetime import datetime, timedelta
 import hashlib
+import datetime
+from datetime import datetime, timedelta
 app = Flask(__name__)
 
 from pymongo import MongoClient
@@ -68,6 +69,16 @@ def sign_in():
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
 
 
+###top10###
+@app.route('/top10')
+def top10():
+    return render_template('top10.html')
+
+@app.route('/top10/api', methods=['GET'])
+def top10_api():
+    top10_list = list(db.top10.find({},{'_id':False}))
+    print(top10_list)
+    return jsonify({'top10': top10_list})
 
 
 if __name__ == '__main__':
