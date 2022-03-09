@@ -16,8 +16,11 @@
 
     <title>Goo-글램핑 :: 리뷰 목록</title>
 
-    <link rel="stylesheet" href="/static/css/reveiw_list.css">
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+        <!--    sweetalert2-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.css">
+
 
     <style>
         * {
@@ -122,8 +125,13 @@
                 url: '/main/post',
                 data: {title_give:title, loc_give:loc, star_give:star, review_give:review},
                 success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload()
+                    Swal.fire({
+                            icon: 'success',
+                            title: 'success',
+                            text: response['msg'],
+                        }).then(function () {
+                            location.reload()
+                        })
                 }
             })
         }
@@ -166,8 +174,13 @@
 
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
-            alert('로그아웃!')
-            window.location.href = "/"
+            return Swal.fire({
+                            icon: 'success',
+                            title: 'success',
+                            text: '로그아웃',
+                        }).then(function () {
+                            location.href = '/'
+                        })
         }
 
 
