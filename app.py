@@ -1,7 +1,5 @@
 from pymongo import MongoClient
-
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-
 import config
 import jwt
 from datetime import datetime, timedelta
@@ -19,12 +17,10 @@ SECRET_KEY = config.SECRET_KEY
 def home():
     return render_template('home.html')
 
-
 ### sign_up api ###
 @app.route('/signup')
 def sign_up():
     return render_template('sign_up.html')
-
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():
@@ -40,7 +36,6 @@ def sign_up_save():
     elif pw_receive != pwcheck_receive:
         return jsonify({'result': 'fail', 'msg': '패스워드가 일치 하지 않습니다.'})
 
-
 @app.route('/signup/idcheck', methods=['POST'])
 def sign_up_idcheck():
     # 아이디중복검사
@@ -50,7 +45,6 @@ def sign_up_idcheck():
         return jsonify({'result': 'fail', 'msg': '중복된 아이디가 존재합니다.'})
     elif result is None:
         return jsonify({'result': 'success', 'msg': '아이디 중복체크완료!'})
-
 
 ### login api #####
 @app.route('/sign_in', methods=['POST'])  # 로그인 API
@@ -73,21 +67,12 @@ def sign_in():
     else:  # 동일한 유저가 없으면,
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
 
-
 ###top10###
 @app.route('/top10')
 def top10():
     return render_template('top10.html')
 
-
 ### review_list api ###
-
-
-@app.route('/main')
-def main():
-    return render_template('review_list.html')
-
-
 @app.route('/main/post', methods=['POST'])
 def review_post():
     title_receive = request.form['title_give']
@@ -121,7 +106,6 @@ def top10_api():
 
 
 ################
-
 @app.route('/main')
 def main_main():
     token_receive = request.cookies.get('mytoken')
@@ -131,9 +115,9 @@ def main_main():
 
         return render_template('review_list.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return redirect(url_for("home", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+        return redirect(url_for("home", msg="로그인 정보가 존재하지 않습니다."))
 
 
 if __name__ == '__main__':
