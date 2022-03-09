@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 import config
 import jwt
 import hashlib
@@ -19,10 +19,14 @@ def home():
 @app.route('/signup')
 def sign_up():
     return render_template('sign_up.html')
+#############
+@app.route('/main/<user_id>')
+def main(user_id):
+    user_info = db.users.find_one({"username": user_id}, {"_id": False})
+    return render_template('user.html', user_info=user_info)
 
-@app.route('/main')
-def main():
-    return render_template('review_list.html')
+
+##############################
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():

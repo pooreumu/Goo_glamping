@@ -81,12 +81,13 @@
                 $.ajax({
                     type: "POST",
                     url: "/sign_in",
+                    dataType: 'json',
                     data: {give_id: id, give_pw: pw},
                     success: function (response) {
                         if (response['result'] == 'success') {
                             $.cookie('mytoken', response['token'], {path: '/'}); //쿠키를 키 벨류 형식으로 건내줌
                             alert( id + '님 반갑습니다!') //누구누구님 반갑습니다 ! 호출
-                            window.location.href = '/main' //메인페이지로 이동
+                            window.location.href = '/main/{{ id }}' //메인페이지로 이동
                         } else {
                             alert(response['msg'])
                         }
