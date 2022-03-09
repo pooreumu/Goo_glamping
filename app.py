@@ -17,10 +17,12 @@ SECRET_KEY = config.SECRET_KEY
 def home():
     return render_template('home.html')
 
+
 ### sign_up api ###
 @app.route('/signup')
 def sign_up():
     return render_template('sign_up.html')
+
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():
@@ -36,6 +38,7 @@ def sign_up_save():
     elif pw_receive != pwcheck_receive:
         return jsonify({'result': 'fail', 'msg': '패스워드가 일치 하지 않습니다.'})
 
+
 @app.route('/signup/idcheck', methods=['POST'])
 def sign_up_idcheck():
     # 아이디중복검사
@@ -45,6 +48,7 @@ def sign_up_idcheck():
         return jsonify({'result': 'fail', 'msg': '중복된 아이디가 존재합니다.'})
     elif result is None:
         return jsonify({'result': 'success', 'msg': '아이디 중복체크완료!'})
+
 
 ### login api #####
 @app.route('/sign_in', methods=['POST'])  # 로그인 API
@@ -67,10 +71,12 @@ def sign_in():
     else:  # 동일한 유저가 없으면,
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
 
+
 ###top10###
 @app.route('/top10')
 def top10():
     return render_template('top10.html')
+
 
 ### review_list api ###
 @app.route('/main/post', methods=['POST'])
@@ -79,9 +85,11 @@ def review_post():
     loc_receive = request.form['loc_give']
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
-
+    review_list = list(db.reviews.find({}, {'_id': False}))
+    num = len(review_list) + 1
     doc = {
 
+        'num':num,
         'title': title_receive,
         # 이미지도 필요!
         'loc': loc_receive,
@@ -94,6 +102,18 @@ def review_post():
 
     return jsonify({'msg': '저장완료!'})
 
+### 리뷰 수정 ###
+@app.route('/main/post/update', methods=['POST'])
+def review_post_upadte():
+    num_receive = request.form['num_give']
+    title_receive = request.form['title_give']
+    loc_receive = request.form['loc_give']
+    star_receive = request.form['star_give']
+    review_receive = request.form['review_give']
+
+    db.reviews.update_one({'num':int(num_receive)},{'$set':{'title':title_receive,'loc':loc_receive,'star':star_receive,'review':review_receive}})
+
+    return jsonify({'msg': '수정완료!'})
 
 
 @app.route('/main/get', methods=['GET'])
