@@ -4,6 +4,7 @@ import config
 import jwt
 from datetime import datetime, timedelta
 import hashlib
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -85,22 +86,28 @@ def review_post():
     loc_receive = request.form['loc_give']
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
+
+    if 'file_give' in request.files:
+        file = request.files["file_give"]
+        filename = secure_filename(file.filename)
+        file.save("static/upload/"+filename)
+
     review_list = list(db.reviews.find({}, {'_id': False}))
     num = len(review_list) + 1
+    
     doc = {
-
         'num':num,
         'title': title_receive,
-        # 이미지도 필요!
         'loc': loc_receive,
         'star': star_receive,
-        'review': review_receive
-
+        'review': review_receive,
+        'img_file':filename
     }
 
     db.reviews.insert_one(doc)
 
     return jsonify({'msg': '저장완료!'})
+
 
 ### 리뷰 수정 ###
 @app.route('/main/post/update', methods=['POST'])
@@ -120,7 +127,6 @@ def review_post_upadte():
 def review_get():
     review_list = list(db.reviews.find({}, {'_id': False}))
     return jsonify({'reviews': review_list})
-
 
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
