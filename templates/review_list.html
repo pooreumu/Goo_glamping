@@ -12,6 +12,8 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
     <title>Goo-글램핑 :: 리뷰 목록</title>
 
     <link rel="stylesheet" href="/static/css/reveiw_list.css">
@@ -159,14 +161,25 @@
                     }
                 }
             })
+
+         }
+
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/"
         }
+
+
     </script>
 </head>
 
 <body>
 <!-- 윗 배너 -->
 <div class="mytitle">
-    <button class="logout_btn" onclick="">로그아웃</button>
+
+    <button class="logout_btn" onclick="sign_out()">로그아웃</button>
+
     <img src="/static/logo.png">
     <!--    <button onclick="open_box()">내가 다녀온 글램핑<p>리뷰 쓰기</p></button>-->
 </div>
@@ -206,7 +219,7 @@
                 </svg>
                 <div class="container">
                     <div class="carousel-caption text-end">
-                        <p><a class="btn btn-lg btn-success" href="#">인기 글램핑 명소 보기</a></p>
+                        <p><a class="btn btn-lg btn-success" href="/top10">인기 글램핑 명소 보기</a></p>
                     </div>
                 </div>
             </div>
@@ -238,11 +251,16 @@
 <!-- 리뷰 등록 창 (임시) -->
 <div class="review_post" id="review-box">
     <div class="form-floating mb-3">
-        <input id="title" type="email" class="form-control" placeholder="글램핑장명">
-        <label>글램핑 장소명</label>
-        <input id="loc" type="email" class="form-control" placeholder="주소명">
-    </div>
-    <div class="input-group mb-3">
+        <div class="mb-3">
+        <label for="formGroupExampleInput" class="form-label">글램핑장 이름</label>
+        <input id="title" type="email" class="form-control" placeholder="ex)Goo_글램핑">
+        </div>
+        <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">글램핑장 주소</label>
+        <input id="loc" type="email" class="form-control" placeholder="ex)서울 은평구 북한산로 242 ">
+            </div>
+
+        <div class="input-group mb-3">
         <label class="input-group-text" for="inputGroupSelect01">별점</label>
         <select class="form-select" id="star">
             <option selected>-- 선택하기 --</option>
@@ -253,9 +271,17 @@
             <option value="5">⭐⭐⭐⭐⭐</option>
         </select>
     </div>
+        <div class="mb-3">
+            <label for="formFile" class="form-label">사진 첨부</label>
+            <input class="form-control" type="file" id="formFile">
+        </div>
+    </div>
+
     <div class="form-floating">
-        <textarea id="review" class="form-control" placeholder="Leave a comment here"></textarea>
-        <label for="floatingTextarea2">자유롭게 리뷰를 써주세요!</label>
+        <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">리뷰란</label>
+        <textarea id="review" class="form-control" placeholder="자유롭게 리뷰를 써주세요!"></textarea>
+    </div>
     </div>
     <div class="mybtns">
         <button onclick="posting()" type="button" class="btn btn-dark">등록하기</button>

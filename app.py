@@ -1,6 +1,7 @@
 from pymongo import MongoClient
-from flask import Flask, render_template, request, jsonify
-from datetime import datetime, timedelta
+
+from flask import Flask, render_template, request, jsonify, url_for, redirect
+
 import config
 import jwt
 from datetime import datetime, timedelta
@@ -81,6 +82,7 @@ def top10():
 
 ### review_list api ###
 
+
 @app.route('/main')
 def main():
     return render_template('review_list.html')
@@ -94,16 +96,19 @@ def review_post():
     review_receive = request.form['review_give']
 
     doc = {
+
         'title': title_receive,
         # 이미지도 필요!
         'loc': loc_receive,
         'star': star_receive,
         'review': review_receive
+
     }
 
     db.reviews.insert_one(doc)
 
     return jsonify({'msg': '저장완료!'})
+
 
 
 @app.route('/main/get', methods=['GET'])
@@ -115,8 +120,24 @@ def review_get():
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
     top10_list = list(db.top10.find({}, {'_id': False}))
-    print(top10_list)
+
     return jsonify({'top10': top10_list})
+
+
+################
+
+@app.route('/main')
+def main_main():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+
+        return render_template('review_list.html', user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
 if __name__ == '__main__':
