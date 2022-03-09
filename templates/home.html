@@ -82,7 +82,6 @@
                     url: "/sign_in",
                     data: {give_id: id, give_pw: pw},
                     success: function (response) {
-                        alert(response["msg"])
                         if (response['result'] == 'success') {
                             $.cookie('mytoken', response['token'], {path: '/'}); //쿠키를 키 벨류 형식으로 건내줌
                             alert( id + '님 반갑습니다!') //누구누구님 반갑습니다 ! 호출
