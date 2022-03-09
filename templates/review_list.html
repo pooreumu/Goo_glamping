@@ -15,6 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <title>Goo-글램핑 :: 리뷰 목록</title>
+
     <link rel="stylesheet" href="/static/css/reveiw_list.css">
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
 
@@ -109,13 +110,65 @@
         function close_box() {
             $('#review-box').hide()
         }
-        ////
-        function sign_out() {
-                $.removeCookie('mytoken', {path: '/'});
-                alert('로그아웃!')
-                window.location.href = "/login"
+
+        function posting() {
+            let title = $('#title').val()
+            let loc = $('#loc').val()
+            let star = $('#star').val()
+            let review = $('#review').val()
+
+            $.ajax({
+                type: 'POST',
+                url: '/main/post',
+                data: {title_give:title, loc_give:loc, star_give:star, review_give:review},
+                success: function (response) {
+                    alert(response['msg'])
+                    window.location.reload()
+                }
+            })
         }
-        /////
+
+            $(document).ready(function (){
+                listing();
+            });
+
+        function listing() {
+            $.ajax({
+                type: 'GET',
+                url: '/main/get',
+                data: {},
+                success: function (response) {
+                    let rows = response['reviews']
+                    for(let i = 0; i < rows.length; i++) {
+                        let title = rows[i]['title']
+                        let loc = rows[i]['loc']
+                        let star = rows[i]['star']
+                        let review = rows[i]['review']
+
+                        let star_image = '⭐'.repeat(star)
+
+                        let temp_html = `<div class="col">
+                                            <div class="card h-100">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${title}</h5>
+                                                    <p class="card-text">${loc}</p>
+                                                    <p>${star_image}</p>
+                                                    <p class="mycomment">${review}</p>
+                                                </div>
+                                            </div>
+                                        </div>`
+                        $('#cards-box').append(temp_html)
+                    }
+                }
+            })
+         }
+
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/"
+        }
+
     </script>
 </head>
 
@@ -123,7 +176,7 @@
 <!-- 윗 배너 -->
 <div class="mytitle">
     <button class="logout_btn" onclick="sign_out()">로그아웃</button>
-    <img src="/static/image/Goo-글램핑 logo.png" alr="로고이미지">
+    <img src="/static/logo.png">
     <!--    <button onclick="open_box()">내가 다녀온 글램핑<p>리뷰 쓰기</p></button>-->
 </div>
 
@@ -196,7 +249,7 @@
     <div class="form-floating mb-3">
         <input id="title" type="email" class="form-control" placeholder="글램핑장명">
         <label>글램핑 장소명</label>
-        <input id="address" type="email" class="form-control" placeholder="주소명">
+        <input id="loc" type="email" class="form-control" placeholder="주소명">
     </div>
     <div class="input-group mb-3">
         <label class="input-group-text" for="inputGroupSelect01">별점</label>
@@ -214,7 +267,7 @@
         <label for="floatingTextarea2">자유롭게 리뷰를 써주세요!</label>
     </div>
     <div class="mybtns">
-        <button type="button" class="btn btn-dark">등록하기</button>
+        <button onclick="posting()" type="button" class="btn btn-dark">등록하기</button>
         <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
     </div>
 </div>

@@ -1,32 +1,28 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from pymongo import MongoClient
+from flask import Flask, render_template, request, jsonify,url_for,redirect
+
 import config
 import jwt
-import hashlib
-import datetime
 from datetime import datetime, timedelta
+import hashlib
+
 app = Flask(__name__)
 
-from pymongo import MongoClient
 client = MongoClient(config.Mongo_key)
 db = client.dbsparta
 
 SECRET_KEY = config.SECRET_KEY
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
 
+### sign_up api ###
 @app.route('/signup')
 def sign_up():
     return render_template('sign_up.html')
-#############
-@app.route('/main/<user_id>')
-def main(user_id):
-    user_info = db.users.find_one({"username": user_id}, {"_id": False})
-    return render_template('user.html', user_info=user_info)
 
-
-##############################
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():
@@ -78,11 +74,60 @@ def sign_in():
 def top10():
     return render_template('top10.html')
 
+
+
+### review_list api ###
+
+# @app.route('/main')
+# def main():
+#     return render_template('review_list.html')
+
+@app.route('/main/post', methods=['POST'])
+def review_post():
+    title_receive = request.form['title_give']
+    loc_receive = request.form['loc_give']
+    star_receive = request.form['star_give']
+    review_receive = request.form['review_give']
+
+    doc = {
+        'title':title_receive,
+        # 이미지도 필요!
+        'loc':loc_receive,
+        'star':star_receive,
+        'review':review_receive
+    }
+
+    db.reviews.insert_one(doc)
+
+    return jsonify({'msg':'저장완료!'})
+
+@app.route('/main/get', methods=['GET'])
+def review_get():
+    review_list = list(db.reviews.find({}, {'_id': False}))
+    return jsonify({'reviews':review_list})
+
+
+
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
     top10_list = list(db.top10.find({},{'_id':False}))
     print(top10_list)
     return jsonify({'top10': top10_list})
+
+################
+
+@app.route('/main')
+def main():
+        token_receive = request.cookies.get('mytoken')
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_info = db.users.find_one({"username": payload["id"]})
+
+            return render_template('review_list.html', user_info=user_info)
+        except jwt.ExpiredSignatureError:
+            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        except jwt.exceptions.DecodeError:
+            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
 if __name__ == '__main__':
