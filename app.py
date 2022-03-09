@@ -97,10 +97,11 @@ def review_post():
 
     doc = {
 
-        'title':title_receive,
-        'loc':loc_receive,
-        'star':star_receive,
-        'review':review_receive
+        'title': title_receive,
+        # 이미지도 필요!
+        'loc': loc_receive,
+        'star': star_receive,
+        'review': review_receive
 
     }
 
@@ -115,9 +116,11 @@ def review_get():
     review_list = list(db.reviews.find({}, {'_id': False}))
     return jsonify({'reviews': review_list})
 
+
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
     top10_list = list(db.top10.find({}, {'_id': False}))
+
     return jsonify({'top10': top10_list})
 
 
