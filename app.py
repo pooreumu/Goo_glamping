@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import config
 import jwt
-import datetime
+from datetime import datetime, timedelta
 import hashlib
 app = Flask(__name__)
 
@@ -18,6 +18,10 @@ def home():
 @app.route('/signup')
 def sign_up():
     return render_template('sign_up.html')
+
+@app.route('/main')
+def main():
+    return render_template('review_list.html')
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():
@@ -50,14 +54,14 @@ def sign_in():
     pw_receive = request.form['give_pw']
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()  # 패스워드 암호화
 
-    result = db.users.find_one({'user_id': id_receive, 'pw': pw_hash})  # 동일한 유저가 있는지 확인
+    result = db.users.find_one({'id': id_receive, 'pw': pw_hash})  # 동일한 유저가 있는지 확인
 
     if result is not None:  # 동일한 유저가 없는게 아니면, = 동일한 유저가 있으면,
         payload = {
             'id': id_receive,
-            'exp': datetime.utcnow() + datetime.timedelta(seconds=60 * 60 * 24)
+            'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')  # 토큰을 건내줌.
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')  # 토큰을 건내줌.
 
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
