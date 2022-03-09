@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <!--    bootstrap-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!--    jquery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <title>Title</title>
+    <title>회원가입</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/icon3.png">
+    <!--    sweetalert2-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.css">
     <style>
         header {
             text-align: center;
@@ -19,8 +24,24 @@
 
         .form-box {
             box-sizing: border-box;
-            width: 800px;
+            width: 900px;
+            padding: 70px;
             margin: auto;
+        }
+
+        .form-box {
+            background-color: white;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+        }
+
+        .main {
+            background-size: cover;
+            background-image: url("https://yaimg.yanolja.com/v5/2020/04/15/17/1280/5e96cb0faea6f1.06139027.JPG");
+
+            width: 100vw;
+            height: 100vh;
+            color: white;
         }
     </style>
     <script>
@@ -35,6 +56,7 @@
             const regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z~!@#$%^&*]{5,15}$/;
             return regExp.test(pw);
         }
+
         //아이디중복확인
         function checkid() {
             let userid = $('#userid').val()
@@ -45,19 +67,32 @@
                 success: function (response) {
 
                     // 정규표현식 userid 에 적용
-                      if (!examinationId(userid)) {
+                    if (!examinationId(userid)) {
                         $('#userid').addClass('fail').removeClass('success')
-                        return alert('아이디는 특수문자 제외 5-10자의 영문자와 숫자만 가능합니다')
+                        //sweetalert2 적용
+                        return Swal.fire({
+                            icon: 'error',
+                            title: 'error',
+                            text: '아이디는 특수문자 제외 5-10자의 영문자와 숫자만 가능합니다',
+                        });
                     }
 
                     // 아이디가 중복되지 않으면 success클래스 추가하고 fail클래스 삭제
                     if (response['result'] === 'success') {
-                        alert(response['msg'])
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'success',
+                            text: response['msg'],
+                        });
                         $('#userid').addClass('success').removeClass('fail')
 
                         // 아이디가 중복되면 fail클래스 생성
                     } else if (response['result'] === 'fail') {
-                        alert(response['msg'])
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'error',
+                            text: response['msg'],
+                        });
                         $('#userid').addClass('fail').removeClass('success')
                     }
                 }
@@ -71,19 +106,36 @@
 
             // 중복체크를 했는지 확인 success클래스가 없으면 alert창을 띄운다
             if (!$('#userid').hasClass('success')) {
-                return alert("중복 확인을 해주세요")
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'error',
+                    text: '중복 확인을 해주세요.',
+                });
                 //fail 클래스가 있으면 해당 alert창을 띄운다.
             } else if ($('#userid').hasClass('fail')) {
-                return alert('아이디를 확인해 주세요')
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'error',
+                    text: '아이디를 확인해주세요',
+                });
             }
             // 정규표현식 userpw 에 적용
             if (!examinationPw(userpw)) {
-                return alert('영문과 숫자 조합의 5-15자의 비밀번호를 설정해 주세요. 특수문자(~!@#$%^&*) 가능')
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'error',
+                    text: '영문과 숫자 조합의 5-15자의 비밀번호를 설정해 주세요. 특수문자(~!@#$%^&*) 가능',
+                });
             }
+
             // 정규표현식 userid 에 적용
             if (!examinationId(userid)) {
                 $('#userid').addClass('fail').removeClass('success')
-                return alert('아이디는 특수문자 제외 5-10자의 영문자와 숫자만 가능합니다')
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'error',
+                    text: '아이디는 특수문자 제외 5-10자의 영문자와 숫자만 가능합니다',
+                });
             }
             $.ajax({
                 type: "POST",
@@ -95,12 +147,20 @@
                 },
                 success: function (response) {
                     if (response['result'] === 'success') {
-                        alert(response['msg'])
-                        window.location.href = '/'
+                        return Swal.fire({
+                            icon: 'success',
+                            title: 'success',
+                            text: response['msg'],
+                        }).then(function () {
+                            location.href = '/'
+                        })
                     } else if (response['result'] === 'fail') {
-                        alert(response['msg'])
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'error',
+                            text: response['msg'],
+                        });
                     }
-
                 }
             })
         }
@@ -109,39 +169,42 @@
     </script>
 </head>
 <body>
-<div class="logo-box">
-    <img src="/static/로고.png" alt="로고">
-</div>
-<header>회원가입</header>
+<div class="main">
+    <div class="logo-box">
+        <img src="/static/logo.png" alt="로고">
+    </div>
+    <header>회원가입</header>
 
-<div class="form-box">
-    <div class="row mb-3">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">아이디</label>
-        <div class="col-sm-10" style="display: flex;">
-            <input style="margin-right: 10px" type="email" class="form-control" id="userid"
-                   placeholder="아이디는 특수문자 제외 5-10자의 영문자와 숫자만 가능합니다.">
-            <button type="submit" class="btn btn-outline-success" onclick="checkid()">중복확인</button>
+    <div class="form-box">
+        <div class="row mb-3">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">아이디</label>
+            <div class="col-sm-10" style="display: flex;">
+                <input style="margin-right: 10px" type="email" class="form-control" id="userid"
+                       placeholder="아이디는 특수문자 제외 5-10자의 영문자와 숫자만 가능합니다.">
+                <button type="submit" class="button is-primary" onclick="checkid()">중복확인</button>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">패스워드</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="userpw"
+                       placeholder="영문과 숫자 조합의 5-15자의 비밀번호를 설정해 주세요. 특수문자(~!@#$%^&*) 가능">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">패스워드 확인</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="pwcheck" placeholder="비밀번호를 확인해 주세요.">
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center; margin-top: 30px;">
+            <button onclick="signup()" type="submit" class="button is-primary">회원가입</button>
         </div>
     </div>
 
-    <div class="row mb-3">
-        <label for="inputPassword3" class="col-sm-2 col-form-label">패스워드</label>
-        <div class="col-sm-10">
-            <input type="password" class="form-control" id="userpw"
-                   placeholder="영문과 숫자 조합의 5-15자의 비밀번호를 설정해 주세요. 특수문자(~!@#$%^&*) 가능">
-        </div>
-    </div>
 
-    <div class="row mb-3">
-        <label for="inputPassword3" class="col-sm-2 col-form-label">패스워드 확인</label>
-        <div class="col-sm-10">
-            <input type="password" class="form-control" id="pwcheck" placeholder="비밀번호를 확인해 주세요.">
-        </div>
-    </div>
-</div>
-
-<div style="display: flex; justify-content: center">
-    <button onclick="signup()" type="submit" class="btn btn-outline-success">회원가입</button>
 </div>
 
 
