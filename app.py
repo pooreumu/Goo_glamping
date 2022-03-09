@@ -21,9 +21,7 @@ def home():
 def sign_up():
     return render_template('sign_up.html')
 
-@app.route('/main')
-def main():
-    return render_template('review_list.html')
+
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():
