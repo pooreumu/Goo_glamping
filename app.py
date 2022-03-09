@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from flask import Flask, render_template, request, jsonify
+from datetime import datetime, timedelta
 import config
 import jwt
 from datetime import datetime, timedelta
@@ -12,17 +13,17 @@ db = client.dbsparta
 
 SECRET_KEY = config.SECRET_KEY
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
+
 ### sign_up api ###
 @app.route('/signup')
 def sign_up():
     return render_template('sign_up.html')
 
-@app.route('/main')
-def main():
-    return render_template('review_list.html')
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():
@@ -38,6 +39,7 @@ def sign_up_save():
     elif pw_receive != pwcheck_receive:
         return jsonify({'result': 'fail', 'msg': '패스워드가 일치 하지 않습니다.'})
 
+
 @app.route('/signup/idcheck', methods=['POST'])
 def sign_up_idcheck():
     # 아이디중복검사
@@ -47,6 +49,7 @@ def sign_up_idcheck():
         return jsonify({'result': 'fail', 'msg': '중복된 아이디가 존재합니다.'})
     elif result is None:
         return jsonify({'result': 'success', 'msg': '아이디 중복체크완료!'})
+
 
 ### login api #####
 @app.route('/sign_in', methods=['POST'])  # 로그인 API
@@ -60,6 +63,7 @@ def sign_in():
     if result is not None:  # 동일한 유저가 없는게 아니면, = 동일한 유저가 있으면,
         payload = {
             'id': id_receive,
+
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')  # 토큰을 건내줌.
@@ -67,17 +71,53 @@ def sign_in():
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
-      
+
+
 ###top10###
 @app.route('/top10')
 def top10():
     return render_template('top10.html')
 
+
+### review_list api ###
+
+@app.route('/main')
+def main():
+    return render_template('review_list.html')
+
+
+@app.route('/main/post', methods=['POST'])
+def review_post():
+    title_receive = request.form['title_give']
+    loc_receive = request.form['loc_give']
+    star_receive = request.form['star_give']
+    review_receive = request.form['review_give']
+
+    doc = {
+        'title': title_receive,
+        # 이미지도 필요!
+        'loc': loc_receive,
+        'star': star_receive,
+        'review': review_receive
+    }
+
+    db.reviews.insert_one(doc)
+
+    return jsonify({'msg': '저장완료!'})
+
+
+@app.route('/main/get', methods=['GET'])
+def review_get():
+    review_list = list(db.reviews.find({}, {'_id': False}))
+    return jsonify({'reviews': review_list})
+
+
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
-    top10_list = list(db.top10.find({},{'_id':False}))
+    top10_list = list(db.top10.find({}, {'_id': False}))
     print(top10_list)
     return jsonify({'top10': top10_list})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
