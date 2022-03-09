@@ -76,7 +76,6 @@ def top10():
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
     top10_list = list(db.top10.find({},{'_id':False}))
-    print(top10_list)
     return jsonify({'top10': top10_list})
 
 if __name__ == '__main__':
