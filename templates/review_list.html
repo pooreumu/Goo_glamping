@@ -12,6 +12,8 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
     <title>Goo-글램핑 :: 리뷰 목록</title>
 
     <link rel="stylesheet" href="/static/css/reveiw_list.css">
@@ -159,14 +161,25 @@
                     }
                 }
             })
+
+         }
+
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/"
         }
+
+
     </script>
 </head>
 
 <body>
 <!-- 윗 배너 -->
 <div class="mytitle">
-    <button class="logout_btn" onclick="">로그아웃</button>
+
+    <button class="logout_btn" onclick="sign_out()">로그아웃</button>
+
     <img src="/static/logo.png">
     <!--    <button onclick="open_box()">내가 다녀온 글램핑<p>리뷰 쓰기</p></button>-->
 </div>

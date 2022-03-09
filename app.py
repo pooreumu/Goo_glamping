@@ -1,6 +1,11 @@
 from pymongo import MongoClient
-from flask import Flask, render_template, request, jsonify
+
+from flask import Flask, render_template, request, jsonify,url_for,redirect
+
+
+
 from datetime import datetime, timedelta
+
 import config
 import jwt
 from datetime import datetime, timedelta
@@ -13,9 +18,11 @@ db = client.dbsparta
 
 SECRET_KEY = config.SECRET_KEY
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
+
 ### sign_up api ###
 @app.route('/signup')
 def sign_up():
@@ -78,9 +85,11 @@ def top10():
 
 ### review_list api ###
 
+
 @app.route('/main')
 def main():
     return render_template('review_list.html')
+
 
 @app.route('/main/post', methods=['POST'])
 def review_post():
@@ -112,6 +121,21 @@ def review_get():
 def top10_api():
     top10_list = list(db.top10.find({},{'_id':False}))
     return jsonify({'top10': top10_list})
+
+################
+
+@app.route('/main')
+def main():
+        token_receive = request.cookies.get('mytoken')
+        try:
+            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+            user_info = db.users.find_one({"username": payload["id"]})
+
+            return render_template('review_list.html', user_info=user_info)
+        except jwt.ExpiredSignatureError:
+            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        except jwt.exceptions.DecodeError:
+            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
 if __name__ == '__main__':
