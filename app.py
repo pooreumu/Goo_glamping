@@ -71,7 +71,7 @@ def sign_in():
 def main():
     return render_template('review_list.html')
 
-@app.route('/main', methods=['POST'])
+@app.route('/main/post', methods=['POST'])
 def review_post():
     title_receive = request.form['title_give']
     loc_receive = request.form['loc_give']
@@ -90,7 +90,7 @@ def review_post():
 
     return jsonify({'msg':'저장완료!'})
 
-@app.route('/main', methods=['GET'])
+@app.route('/main/get', methods=['GET'])
 def review_get():
     review_list = list(db.reviews.find({}, {'_id': False}))
     return jsonify({'reviews':review_list})

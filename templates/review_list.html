@@ -117,7 +117,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/main',
+                url: '/main/post',
                 data: {title_give:title, loc_give:loc, star_give:star, review_give:review},
                 success: function (response) {
                     alert(response['msg'])
@@ -133,7 +133,7 @@
         function listing() {
             $.ajax({
                 type: 'GET',
-                url: '/main',
+                url: '/main/get',
                 data: {},
                 success: function (response) {
                     let rows = response['reviews']
