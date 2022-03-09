@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, jsonify
+from datetime import datetime, timedelta
 import config
 import jwt
 import datetime
@@ -50,19 +51,49 @@ def sign_in():
     pw_receive = request.form['give_pw']
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()  # 패스워드 암호화
 
-    result = db.users.find_one({'user_id': id_receive, 'pw': pw_hash})  # 동일한 유저가 있는지 확인
+    result = db.users.find_one({'id': id_receive, 'pw': pw_hash})  # 동일한 유저가 있는지 확인
 
     if result is not None:  # 동일한 유저가 없는게 아니면, = 동일한 유저가 있으면,
         payload = {
             'id': id_receive,
-            'exp': datetime.utcnow() + datetime.timedelta(seconds=60 * 60 * 24)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')  # 토큰을 건내줌.
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256') # 토큰을 건내줌.
 
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
 
+
+### review_list api ###
+
+@app.route('/main')
+def main():
+    return render_template('review_list.html')
+
+@app.route('/main', methods=['POST'])
+def review_post():
+    title_receive = request.form['title_give']
+    loc_receive = request.form['loc_give']
+    star_receive = request.form['star_give']
+    review_receive = request.form['review_give']
+
+    doc = {
+        'title':title_receive,
+        # 이미지도 필요!
+        'loc':loc_receive,
+        'star':star_receive,
+        'review':review_receive
+    }
+
+    db.reviews.insert_one(doc)
+
+    return jsonify({'msg':'저장완료!'})
+
+@app.route('/main', methods=['GET'])
+def review_get():
+    review_list = list(db.reviews.find({}, {'_id': False}))
+    return jsonify({'reviews':review_list})
 
 
 
