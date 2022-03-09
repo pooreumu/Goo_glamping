@@ -161,20 +161,25 @@
                     }
                 }
             })
-        }
+
+         }
 
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
             alert('로그아웃!')
             window.location.href = "/"
         }
+
+
     </script>
 </head>
 
 <body>
 <!-- 윗 배너 -->
 <div class="mytitle">
+
     <button class="logout_btn" onclick="sign_out()">로그아웃</button>
+
     <img src="/static/logo.png">
     <!--    <button onclick="open_box()">내가 다녀온 글램핑<p>리뷰 쓰기</p></button>-->
 </div>

@@ -1,5 +1,7 @@
 from pymongo import MongoClient
-from flask import Flask, render_template, request, jsonify,url_for,redirect
+
+from flask import Flask, render_template, request, jsonify, url_for, redirect
+
 import config
 import jwt
 from datetime import datetime, timedelta
@@ -17,10 +19,12 @@ SECRET_KEY = config.SECRET_KEY
 def home():
     return render_template('home.html')
 
+
 ### sign_up api ###
 @app.route('/signup')
 def sign_up():
     return render_template('sign_up.html')
+
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():
@@ -65,7 +69,6 @@ def sign_in():
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')  # 토큰을 건내줌.
 
-
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
@@ -76,7 +79,10 @@ def sign_in():
 def top10():
     return render_template('top10.html')
 
+
 ### review_list api ###
+
+
 @app.route('/main')
 def main():
     return render_template('review_list.html')
@@ -98,30 +104,37 @@ def review_post():
     }
 
     db.reviews.insert_one(doc)
+
     return jsonify({'msg': '저장완료!'})
+
+
 @app.route('/main/get', methods=['GET'])
 def review_get():
     review_list = list(db.reviews.find({}, {'_id': False}))
     return jsonify({'reviews': review_list})
 
+
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
-    top10_list = list(db.top10.find({},{'_id':False}))
+    top10_list = list(db.top10.find({}, {'_id': False}))
     return jsonify({'top10': top10_list})
 
+
 ################
+
 @app.route('/main')
 def main_main():
-        token_receive = request.cookies.get('mytoken')
-        try:
-            payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-            user_info = db.users.find_one({"username": payload["id"]})
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
 
-            return render_template('review_list.html', user_info=user_info)
-        except jwt.ExpiredSignatureError:
-            return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-        except jwt.exceptions.DecodeError:
-            return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+        return render_template('review_list.html', user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
