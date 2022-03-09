@@ -17,7 +17,8 @@
     <title>Goo-글램핑 :: 리뷰 목록</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-        <!--    sweetalert2-->
+
+    <!--    sweetalert2-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.css">
 
@@ -25,6 +26,10 @@
     <style>
         * {
             font-family: 'Gowun Dodum', sans-serif;
+        }
+
+        body {
+            height: 100vh;
         }
 
         .mytitle {
@@ -103,6 +108,33 @@
         .mybtns > button {
             margin-right: 10px;
         }
+
+        .modal_overlay {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+        }
+
+        .modal_window {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 600px;
+            height: 400px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px;
+        }
     </style>
 
     <script>
@@ -147,9 +179,9 @@
             })
         }
 
-            $(document).ready(function (){
-                listing();
-            });
+        $(document).ready(function () {
+            listing();
+        });
 
         function listing() {
             $.ajax({
@@ -158,23 +190,26 @@
                 data: {},
                 success: function (response) {
                     let rows = response['reviews']
-                    for(let i = 0; i < rows.length; i++) {
+                    for (let i = 0; i < rows.length; i++) {
                         let title = rows[i]['title']
                         let loc = rows[i]['loc']
                         let star = rows[i]['star']
                         let review = rows[i]['review']
                         let file = rows[i]['img_file']
+                        let num = rows[i]['num']
 
                         let star_image = '⭐'.repeat(star)
 
                         let temp_html = `<div class="col">
                                             <div class="card h-100">
-                                     <img class="is-rounded" src="/static/upload/${file}">
+                                              <img class="is-rounded" src="/static/upload/${file}">
                                                 <div class="card-body">
                                                     <h5 class="card-title">${title}</h5>
                                                     <p class="card-text">${loc}</p>
                                                     <p>${star_image}</p>
                                                     <p class="mycomment">${review}</p>
+                                                    <p>#${num}</p>
+                                                    <button onclick="open_modal(${num})" type="button" class="btn btn-outline-dark">수정하기</button>
                                                 </div>
                                             </div>
                                         </div>`
@@ -183,6 +218,7 @@
                 }
             })
          }
+      }
 
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
@@ -195,6 +231,32 @@
             })
         }
 
+        {#모달창 닫기#}
+        function close_modal() {
+            $('.modal-box').hide()
+        }
+        {#모달창 열고 해당번호 클래스에 추가#}
+        function open_modal(num) {
+            $('.modal-box').show()
+            $('.modal-box').addClass(`${num}`)
+        }
+        {#클래스에 있는 번호 추출 및 서버에 넘기기#}
+        function update_modal() {
+            let num = $('.modal-box').attr('class').split(' ')[1]
+            let title = $('#title_update').val()
+            let loc = $('#loc_update').val()
+            let star = $('#star_update').val()
+            let review = $('#review_update').val()
+            $.ajax({
+                type: "POST",
+                url: "/main/post/update",
+                data: {num_give:num, title_give: title, loc_give: loc, star_give: star, review_give: review},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+        }
 
     </script>
 </head>
@@ -318,6 +380,37 @@
     </div>
 </div>
 
+<div class="modal-box" style="display: none">
+    <div class="modal_overlay" id="modal-window">
+        <div class="modal_window">
+            <div class="form-floating mb-3">
+                <input id="title_update" type="email" class="form-control" placeholder="글램핑장명">
+                <label>글램핑 장소명</label>
+                <input id="loc_update" type="email" class="form-control" placeholder="주소명">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">별점</label>
+                <select class="form-select" id="star_update">
+                    <option selected>-- 선택하기 --</option>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+            </div>
+            <div class="form-floating">
+                <textarea id="review_update" class="form-control" placeholder="Leave a comment here"></textarea>
+                <label for="floatingTextarea2">자유롭게 리뷰를 써주세요!</label>
+            </div>
+            <div class="mybtns">
+                <button onclick="update_modal()" type="button" class="btn btn-dark">수정하기</button>
+                <button onclick="close_modal()" type="button" class="btn btn-outline-dark">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- 리뷰 리스트 -->
 <div class="mycards">
     <div class="row row-cols-1 row-cols-md-3 g-4" id="cards-box">
@@ -330,6 +423,8 @@
                     <p class="card-text">주소</p>
                     <p>⭐⭐⭐</p>
                     <p class="mycomment">리뷰 내용</p>
+                    <p>#1</p>
+                    <button onclick="open_modal()" type="button" class="btn btn-outline-dark">수정하기</button>
                 </div>
             </div>
         </div>

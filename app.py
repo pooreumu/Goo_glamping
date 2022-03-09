@@ -1,7 +1,5 @@
 from pymongo import MongoClient
-
 from flask import Flask, render_template, request, jsonify, url_for, redirect
-
 import config
 import jwt
 from datetime import datetime, timedelta
@@ -82,36 +80,48 @@ def top10():
 
 
 ### review_list api ###
-
-
-@app.route('/main')
-def main():
-    return render_template('review_list.html')
-
-
 @app.route('/main/post', methods=['POST'])
 def review_post():
     title_receive = request.form['title_give']
     loc_receive = request.form['loc_give']
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
+
     if 'file_give' in request.files:
         file = request.files["file_give"]
         filename = secure_filename(file.filename)
         file.save("static/upload/"+filename)
 
+    review_list = list(db.reviews.find({}, {'_id': False}))
+    num = len(review_list) + 1
+    
     doc = {
+        'num':num,
         'title': title_receive,
         'loc': loc_receive,
         'star': star_receive,
         'review': review_receive,
         'img_file':filename
-
     }
 
     db.reviews.insert_one(doc)
 
     return jsonify({'msg': '저장완료!'})
+
+
+### 리뷰 수정 ###
+@app.route('/main/post/update', methods=['POST'])
+def review_post_upadte():
+    num_receive = request.form['num_give']
+    title_receive = request.form['title_give']
+    loc_receive = request.form['loc_give']
+    star_receive = request.form['star_give']
+    review_receive = request.form['review_give']
+
+    db.reviews.update_one({'num':int(num_receive)},{'$set':{'title':title_receive,'loc':loc_receive,'star':star_receive,'review':review_receive}})
+
+    return jsonify({'msg': '수정완료!'})
+
 
 @app.route('/main/get', methods=['GET'])
 def review_get():
@@ -126,7 +136,6 @@ def top10_api():
 
 
 ################
-
 @app.route('/main')
 def main_main():
     token_receive = request.cookies.get('mytoken')
@@ -136,9 +145,9 @@ def main_main():
 
         return render_template('review_list.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+        return redirect(url_for("home", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+        return redirect(url_for("home", msg="로그인 정보가 존재하지 않습니다."))
 
 
 if __name__ == '__main__':
