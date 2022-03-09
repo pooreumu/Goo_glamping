@@ -113,20 +113,13 @@
                 url: '/top10/api',
                 data: {},
                 success: function (response) {
-                    console.log(response)
                     let rows = response['top10']
-                    console.log(rows)
                     for (let i = 0; i < rows.length; i++) {
                         let title = rows[i]['title']
-                        console.log(title)
                         let img1 = rows[i]['img1']
-                        console.log(img1)
                         let img2 = rows[i]['img2']
-                        console.log(img2)
                         let img3 = rows[i]['img3']
-                        console.log(img3)
                         let homepage = rows[i]['homepage']
-                        console.log(homepage)
 
                         let temp_html = `<div class="card-box">
                                             <div class="card" onclick="location.href='${homepage}'">
