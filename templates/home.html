@@ -74,6 +74,7 @@
 
         function hide() {
             $('#login_box').toggle();
+            $('#title').show();
         };
 
         function login() {
@@ -117,32 +118,35 @@
 
 </head>
 <body>
-<div class="main">
-    <div class="title" id="title">
-        <h1 style="font-size:1em">Welcome to 구글램핑</h1>
-        <a onclick="login()" style="color: white; font-size: 0.6em; margin-top: 1.5em">시작하기⛺</a>
+    <div class="main">
+        <div class="title" id="title">
+            <h1 style="font-size:1em">Welcome to 구글램핑</h1>
+            <a onclick="login()" style="color: white; font-size: 0.6em; margin-top: 1.5em">시작하기⛺</a>
+        </div>
+        <div class="login_box" id="login_box">
+            <a onclick="hide()">
+                <img src="/static/logo.png" style="width: 240px; height: 60px; margin-bottom: 10px;">
+            </a>
+                <span style="font-size:1.5em; color:green; font-weight:1000; margin-bottom: 10px;">로그인</span>
+                <div class="field">
+                    <div class="control">
+                        <input id="id" class="input" type="text" placeholder="아이디를 입력해주세요">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input id="pw" class="input" type="password" placeholder="비밀번호를 입력해주세요">
+                    </div>
+                    <p id="id_none" style="color: red;font-size:4px"></p>
+                </div>
+                <div style="margin-top: 10px">
+                    <button onclick="window.location.href='/signup'" class="button is-primary"
+                            style="margin-right: 30px;height: 36px;">회원가입
+                    </button>
+                    <button onclick="sign_in()" class="button is-primary" style="height: 36px;">로그인</button>
+                </div>
+        </div>
     </div>
-    <div class="login_box" id="login_box">
-        <span style="font-size:1.8em; color:green; font-weight:1000; margin-bottom: 30px;">로그인</span>
-        <div class="field">
-            <div class="control">
-                <input id="id" class="input" type="text" placeholder="아이디를 입력해주세요">
-            </div>
-        </div>
-        <div class="field">
-            <div class="control">
-                <input id="pw" class="input" type="password" placeholder="비밀번호를 입력해주세요">
-            </div>
-            <p id="id_none" style="color: red;font-size:4px"></p>
-        </div>
-        <div style="margin-top: 10px">
-            <button onclick="window.location.href='/signup'" class="button is-primary"
-                    style="margin-right: 30px;">회원가입
-            </button>
-            <button onclick="sign_in()" class="button is-primary">로그인</button>
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

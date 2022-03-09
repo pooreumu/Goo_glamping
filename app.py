@@ -4,6 +4,7 @@ import config
 import jwt
 from datetime import datetime, timedelta
 import hashlib
+
 app = Flask(__name__)
 
 client = MongoClient(config.Mongo_key)
@@ -18,6 +19,10 @@ def home():
 @app.route('/signup')
 def sign_up():
     return render_template('sign_up.html')
+
+@app.route('/main')
+def main():
+    return render_template('review_list.html')
 
 @app.route('/signup/save', methods=['POST'])
 def sign_up_save():
@@ -62,6 +67,17 @@ def sign_in():
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
+      
+###top10###
+@app.route('/top10')
+def top10():
+    return render_template('top10.html')
+
+@app.route('/top10/api', methods=['GET'])
+def top10_api():
+    top10_list = list(db.top10.find({},{'_id':False}))
+    print(top10_list)
+    return jsonify({'top10': top10_list})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
