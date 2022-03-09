@@ -1,8 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import config
 import jwt
-import datetime
 import hashlib
+import datetime
+from datetime import datetime, timedelta
 app = Flask(__name__)
 
 from pymongo import MongoClient
@@ -50,20 +51,30 @@ def sign_in():
     pw_receive = request.form['give_pw']
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()  # 패스워드 암호화
 
-    result = db.users.find_one({'user_id': id_receive, 'pw': pw_hash})  # 동일한 유저가 있는지 확인
+    result = db.users.find_one({'id': id_receive, 'pw': pw_hash})  # 동일한 유저가 있는지 확인
 
     if result is not None:  # 동일한 유저가 없는게 아니면, = 동일한 유저가 있으면,
         payload = {
             'id': id_receive,
-            'exp': datetime.utcnow() + datetime.timedelta(seconds=60 * 60 * 24)
+            'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf-8')  # 토큰을 건내줌.
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')  # 토큰을 건내줌.
 
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
 
 
+###top10###
+@app.route('/top10')
+def top10():
+    return render_template('top10.html')
+
+@app.route('/top10/api', methods=['GET'])
+def top10_api():
+    top10_list = list(db.top10.find({},{'_id':False}))
+    print(top10_list)
+    return jsonify({'top10': top10_list})
 
 
 if __name__ == '__main__':
