@@ -224,32 +224,6 @@
                 location.href = '/'
             })
         }
-        // {#모달창 닫기#}
-        function close_modal() {
-            $('.modal-box').hide()
-        }
-        // {#모달창 열고 해당번호 클래스에 추가#}
-        function open_modal(num) {
-            $('.modal-box').show()
-            $('.modal-box').addClass(`${num}`)
-        }
-        // {#클래스에 있는 번호 추출 및 서버에 넘기기#}
-        function update_modal() {
-            let num = $('.modal-box').attr('class').split(' ')[1]
-            let title = $('#title_update').val()
-            let loc = $('#loc_update').val()
-            let star = $('#star_update').val()
-            let review = $('#review_update').val()
-            $.ajax({
-                type: "POST",
-                url: "/main/post/update",
-                data: {num_give:num, title_give: title, loc_give: loc, star_give: star, review_give: review},
-                success: function (response) {
-                    alert(response["msg"])
-                    window.location.reload()
-                }
-            });
-        }
 
         {#모달창 닫기#}
         function close_modal() {
@@ -414,6 +388,7 @@
                 <button onclick="close_modal()" type="button" class="btn btn-outline-dark">닫기</button>
             </div>
         </div>
+    </div>
     </div>
 </div>
 
