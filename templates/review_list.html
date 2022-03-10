@@ -158,7 +158,6 @@
             form_data.append("loc_give", loc)
             form_data.append("star_give", star)
             form_data.append("review_give", review)
-            console.log(file, title, loc, star, review)
 
             $.ajax({
                 type: "POST",
@@ -253,8 +252,13 @@
                 url: "/main/post/update",
                 data: {num_give:num, title_give: title, loc_give: loc, star_give: star, review_give: review},
                 success: function (response) {
-                    alert(response["msg"])
-                    window.location.reload()
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'success',
+                        text: response['msg'],
+                    }).then(function () {
+                        location.reload()
+                    })
                 }
             });
         }
