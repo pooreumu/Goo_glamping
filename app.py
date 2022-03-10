@@ -67,7 +67,7 @@ def sign_in():
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
 
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256').decode('utf8')
             # .decode('utf8')  # 토큰을 건내줌.
 
 
@@ -79,7 +79,16 @@ def sign_in():
 ###top10###
 @app.route('/top10')
 def top10():
-    return render_template('top10.html')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+
+        return render_template('top10.html', user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("home", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("home", msg="로그인 정보가 존재하지 않습니다."))
 
 
 ### review_list api ###
@@ -89,7 +98,6 @@ def review_post():
     loc_receive = request.form['loc_give']
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
-
     if 'file_give' in request.files:
         file = request.files["file_give"]
         filename = secure_filename(file.filename)
