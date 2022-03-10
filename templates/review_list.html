@@ -190,6 +190,7 @@
                         let star = rows[i]['star']
                         let review = rows[i]['review']
                         let file = rows[i]['img_file']
+                        let num = rows[i]['num']
 
                         let star_image = '⭐'.repeat(star)
 
@@ -201,6 +202,8 @@
                                                     <p class="card-text">${loc}</p>
                                                     <p>${star_image}</p>
                                                     <p class="mycomment">${review}</p>
+                                                    <p>#${num}</p>
+                                                    <button onclick="open_modal(${num})" type="button" class="btn btn-outline-dark">수정하기</button>
                                                 </div>
                                             </div>
                                         </div>`
