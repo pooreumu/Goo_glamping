@@ -21,6 +21,7 @@ SECRET_KEY = config.SECRET_KEY
 def home():
     return render_template('home.html')
 
+
 ### sign_up api ###
 @app.route('/signup')
 def sign_up():
@@ -41,6 +42,7 @@ def sign_up_save():
     elif pw_receive != pwcheck_receive:
         return jsonify({'result': 'fail', 'msg': '패스워드가 일치 하지 않습니다.'})
 
+
 @app.route('/signup/idcheck', methods=['POST'])
 def sign_up_idcheck():
     # 아이디중복검사
@@ -50,6 +52,7 @@ def sign_up_idcheck():
         return jsonify({'result': 'fail', 'msg': '중복된 아이디가 존재합니다.'})
     elif result is None:
         return jsonify({'result': 'success', 'msg': '아이디 중복체크완료!'})
+
 
 ### login api #####
 @app.route('/sign_in', methods=['POST'])  # 로그인 API
@@ -66,17 +69,21 @@ def sign_in():
 
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
+
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
             # .decode('utf8')  # 토큰을 건내줌.
+
 
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
         return jsonify({'result': 'fail', 'msg': '아이디/패스워드가 일치하지 않습니다.'})
 
+
 ###top10###
 @app.route('/top10')
 def top10():
     return render_template('top10.html')
+
 
 ### review_list api ###
 @app.route('/main/post', methods=['POST'])
@@ -85,6 +92,7 @@ def review_post():
     loc_receive = request.form['loc_give']
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
+
 
     # if 'file_give' in request.files:
     file = request.files["file_give"]
@@ -117,8 +125,10 @@ def review_post_upadte():
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
 
+
     db.reviews.update_one({'num':int(num_receive)},
                           {'$set':{'title':title_receive,'loc':loc_receive,'star':star_receive,'review':review_receive}})
+
 
     return jsonify({'msg': '수정완료!'})
 
@@ -129,14 +139,14 @@ def review_get():
     return jsonify({'reviews': review_list})
 
 
-
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
-    top10_list = list(db.top10.find({},{'_id':False}))
+    top10_list = list(db.top10.find({}, {'_id': False}))
+
     return jsonify({'top10': top10_list})
 
-################
 
+################
 @app.route('/main')
 def main_main():
     token_receive = request.cookies.get('mytoken')
