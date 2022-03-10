@@ -4,11 +4,15 @@ import config
 import jwt
 from datetime import datetime, timedelta
 import hashlib
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-client = MongoClient(config.Mongo_key)
-db = client.dbsparta
+client = MongoClient('mongodb+srv://test:sparta@cluster0.ywgct.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
+db = client.hanghae99
+
+# client = MongoClient(config.Mongo_key)
+# db = client.dbsparta
 
 SECRET_KEY = config.SECRET_KEY
 
@@ -65,7 +69,10 @@ def sign_in():
 
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')  # 토큰을 건내줌.
+
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+            # .decode('utf8')  # 토큰을 건내줌.
+
 
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
@@ -85,20 +92,29 @@ def review_post():
     loc_receive = request.form['loc_give']
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
-    review_list = list(db.reviews.find({}, {'_id': False}))
-    num = len(review_list) + 1
+
+
+    # if 'file_give' in request.files:
+    file = request.files["file_give"]
+    filename = secure_filename(file.filename)
+    file.save("./static/upload/"+filename)
+
+    reviews_list = list(db.reviews.find({}, {'_id': False}))
+    count = len(reviews_list) + 1
+
     doc = {
-        'num':num,
+        'num' : count,
         'title': title_receive,
-        # 이미지도 필요!
         'loc': loc_receive,
         'star': star_receive,
-        'review': review_receive
+        'review': review_receive,
+        'img_file':filename
     }
 
     db.reviews.insert_one(doc)
 
     return jsonify({'msg': '저장완료!'})
+
 
 ### 리뷰 수정 ###
 @app.route('/main/post/update', methods=['POST'])
@@ -109,9 +125,13 @@ def review_post_upadte():
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
 
-    db.reviews.update_one({'num':int(num_receive)},{'$set':{'title':title_receive,'loc':loc_receive,'star':star_receive,'review':review_receive}})
+
+    db.reviews.update_one({'num':int(num_receive)},
+                          {'$set':{'title':title_receive,'loc':loc_receive,'star':star_receive,'review':review_receive}})
+
 
     return jsonify({'msg': '수정완료!'})
+
 
 @app.route('/main/get', methods=['GET'])
 def review_get():
@@ -122,6 +142,7 @@ def review_get():
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
     top10_list = list(db.top10.find({}, {'_id': False}))
+
     return jsonify({'top10': top10_list})
 
 
