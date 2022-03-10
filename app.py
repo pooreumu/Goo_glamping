@@ -5,7 +5,6 @@ import jwt
 from datetime import datetime, timedelta
 import hashlib
 from werkzeug.utils import secure_filename
-import uuid
 
 app = Flask(__name__)
 
@@ -102,9 +101,6 @@ def review_post():
     if 'file_give' in request.files:
         file = request.files["file_give"]
         filename = secure_filename(file.filename)
-        # 파일이름 랜덤변환
-        filename = str(uuid.uuid4())
-        print(filename)
         file.save("./static/upload/"+filename)
 
     reviews_list = list(db.reviews.find({}, {'_id': False}))
