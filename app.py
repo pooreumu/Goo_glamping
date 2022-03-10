@@ -1,15 +1,18 @@
 from pymongo import MongoClient
-from flask import Flask, render_template, request, jsonify
-from datetime import datetime, timedelta
+from flask import Flask, render_template, request, jsonify, url_for, redirect
 import config
 import jwt
 from datetime import datetime, timedelta
 import hashlib
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-client = MongoClient(config.Mongo_key)
-db = client.dbsparta
+client = MongoClient('mongodb+srv://test:sparta@cluster0.ywgct.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
+db = client.hanghae99
+
+# client = MongoClient(config.Mongo_key)
+# db = client.dbsparta
 
 SECRET_KEY = config.SECRET_KEY
 
@@ -66,7 +69,10 @@ def sign_in():
 
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')  # 토큰을 건내줌.
+
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+            # .decode('utf8')  # 토큰을 건내줌.
+
 
         return jsonify({'result': 'success', 'token': token})
     else:  # 동일한 유저가 없으면,
@@ -80,12 +86,6 @@ def top10():
 
 
 ### review_list api ###
-
-@app.route('/main')
-def main():
-    return render_template('review_list.html')
-
-
 @app.route('/main/post', methods=['POST'])
 def review_post():
     title_receive = request.form['title_give']
@@ -93,17 +93,44 @@ def review_post():
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
 
+
+    # if 'file_give' in request.files:
+    file = request.files["file_give"]
+    filename = secure_filename(file.filename)
+    file.save("./static/upload/"+filename)
+
+    reviews_list = list(db.reviews.find({}, {'_id': False}))
+    count = len(reviews_list) + 1
+
     doc = {
+        'num' : count,
         'title': title_receive,
-        # 이미지도 필요!
         'loc': loc_receive,
         'star': star_receive,
-        'review': review_receive
+        'review': review_receive,
+        'img_file':filename
     }
 
     db.reviews.insert_one(doc)
 
     return jsonify({'msg': '저장완료!'})
+
+
+### 리뷰 수정 ###
+@app.route('/main/post/update', methods=['POST'])
+def review_post_upadte():
+    num_receive = request.form['num_give']
+    title_receive = request.form['title_give']
+    loc_receive = request.form['loc_give']
+    star_receive = request.form['star_give']
+    review_receive = request.form['review_give']
+
+
+    db.reviews.update_one({'num':int(num_receive)},
+                          {'$set':{'title':title_receive,'loc':loc_receive,'star':star_receive,'review':review_receive}})
+
+
+    return jsonify({'msg': '수정완료!'})
 
 
 @app.route('/main/get', methods=['GET'])
@@ -115,8 +142,23 @@ def review_get():
 @app.route('/top10/api', methods=['GET'])
 def top10_api():
     top10_list = list(db.top10.find({}, {'_id': False}))
-    print(top10_list)
+
     return jsonify({'top10': top10_list})
+
+
+################
+@app.route('/main')
+def main_main():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+
+        return render_template('review_list.html', user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("home", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("home", msg="로그인 정보가 존재하지 않습니다."))
 
 
 if __name__ == '__main__':

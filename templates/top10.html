@@ -10,19 +10,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+<!--불마 css링크-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
     <title>Title</title>
     <link rel="shortcut icon" type="image/x-icon" href="/static/icon3.png">
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
 
     <style>
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
         .top10-title {
-            background-image:url('https://upload.wikimedia.org/wikipedia/commons/3/3f/Jeju_Silla_Hotel_Glamping.jpg');
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://upload.wikimedia.org/wikipedia/commons/3/3f/Jeju_Silla_Hotel_Glamping.jpg');
             background-position: center;
             background-size: cover;
 
             color: white;
 
             width: 95%;
-            max-width: 750px;
+            max-width: 1200px;
             height: 200px;
 
             display: flex;
@@ -34,6 +41,23 @@
             border-radius: 10px;
 
             margin: 20px auto 40px auto;
+        }
+
+        .logout_btn {
+            width: 130px;
+            height: 40px;
+
+            background-color: transparent;
+            color: white;
+
+            position: absolute;
+            right: 2%;
+            top: 1%;
+
+            border-radius: 10px;
+            border: 1px solid white;
+
+            margin-top: 10px;
         }
 
         .card-box {
@@ -66,6 +90,17 @@
 
             cursor: pointer;
         }
+
+        .hero-body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .title {
+            cursor: pointer;
+        }
     </style>
     <script>
         $(document).ready(function () {
@@ -78,20 +113,13 @@
                 url: '/top10/api',
                 data: {},
                 success: function (response) {
-                    console.log(response)
                     let rows = response['top10']
-                    console.log(rows)
                     for (let i = 0; i < rows.length; i++) {
                         let title = rows[i]['title']
-                        console.log(title)
                         let img1 = rows[i]['img1']
-                        console.log(img1)
                         let img2 = rows[i]['img2']
-                        console.log(img2)
                         let img3 = rows[i]['img3']
-                        console.log(img3)
                         let homepage = rows[i]['homepage']
-                        console.log(homepage)
 
                         let temp_html = `<div class="card-box">
                                             <div class="card" onclick="location.href='${homepage}'">
@@ -113,9 +141,21 @@
     </script>
 </head>
 <body>
-    <div class="top10-title">
-        top10
-    </div>
+    <section class="hero is-warning">
+        <div class="hero-body">
+            <p class="title">
+                <img src="/static/logo.png" onclick="location.href='/main'">
+            </p>
+            <p class="subtitle">
+                top10
+            </p>
+        </div>
+    </section>
+    <button class="logout_btn" onclick="">로그아웃</button>
+<!--    <div class="top10-title">-->
+<!--        -->
+<!--        top10-->
+<!--    </div>-->
     <div id="card-boxes">
 <!--        <div class="card-box">-->
 <!--            <div class="card" onclick="location.href='https://bookhansan.campingt.me/'">-->
