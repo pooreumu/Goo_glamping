@@ -8,11 +8,8 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb+srv://test:sparta@cluster0.ywgct.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
-db = client.hanghae99
-
-# client = MongoClient(config.Mongo_key)
-# db = client.dbsparta
+client = MongoClient(config.Mongo_key)
+db = client.dbsparta
 
 SECRET_KEY = config.SECRET_KEY
 
@@ -82,7 +79,16 @@ def sign_in():
 ###top10###
 @app.route('/top10')
 def top10():
-    return render_template('top10.html')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"userid": payload["id"]})
+
+        return render_template('top10.html', user_info=user_info)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("home", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("home", msg="로그인 정보가 존재하지 않습니다."))
 
 
 ### review_list api ###
@@ -94,10 +100,10 @@ def review_post():
     review_receive = request.form['review_give']
 
 
-    if 'file_give' in request.files:
-        file = request.files["file_give"]
-        filename = secure_filename(file.filename)
-        file.save("./static/upload/"+filename)
+    #if 'file_give' in request.files:
+    file = request.files["file_give"]
+    filename = secure_filename(file.filename)
+    file.save("./static/upload/"+filename)
 
     reviews_list = list(db.reviews.find({}, {'_id': False}))
     count = len(reviews_list) + 1
