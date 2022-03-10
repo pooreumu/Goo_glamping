@@ -13,9 +13,6 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
-<!--불마 css링크-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-
     <title>인기글램핑명소</title>
     <link rel="shortcut icon" type="image/x-icon" href="/static/icon3.png">
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
@@ -42,9 +39,11 @@
             justify-content: center;
         }
         .top10_title {
-            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://upload.wikimedia.org/wikipedia/commons/3/3f/Jeju_Silla_Hotel_Glamping.jpg');
+            background-image: url("https://ifh.cc/g/JKJd84.jpg");
             background-position: center;
             background-size: cover;
+
+            font-size: 40px;
 
             color: white;
 
@@ -62,20 +61,6 @@
 
             margin: 20px auto 40px auto;
         }
-
-        /*.hero-body {*/
-        /*    width: 100%;*/
-        /*    height: 230px;*/
-
-        /*    background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://search.pstatic.net/common/?autoRotate=true&amp;quality=95&amp;type=w750&amp;src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20211125_181%2F1637806739989JTe1a_JPEG%2Fimage.jpg');*/
-        /*    background-position: center;*/
-        /*    background-size: cover;*/
-
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    align-items: center;*/
-        /*    justify-content: center;*/
-        /*}*/
 
         .logout_btn {
             width: 130px;
@@ -128,13 +113,6 @@
 
             cursor: pointer;
         }
-
-        /*.hero-body{*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*    align-items: center;*/
-        /*    justify-content: center;*/
-        /*}*/
 
         .title {
             cursor: pointer;
@@ -192,8 +170,8 @@
 <body>
     <div class="mytitle">
         <img class="title" src="/static/logo.png" onclick="location.href='/main'">
+        <button class="logout_btn" onclick="sign_out1()">로그아웃</button>
     </div>
-    <button class="logout_btn" onclick="sign_out1()">로그아웃</button>
     <div class="top10_title">
         인기 글램핑 명소
     </div>
