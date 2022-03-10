@@ -17,8 +17,7 @@
     <title>Goo-글램핑 :: 리뷰 목록</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-
-    <!--    sweetalert2-->
+        <!--    sweetalert2-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.4/dist/sweetalert2.css">
 
@@ -26,10 +25,6 @@
     <style>
         * {
             font-family: 'Gowun Dodum', sans-serif;
-        }
-
-        body {
-            height: 100vh;
         }
 
         .mytitle {
@@ -108,33 +103,6 @@
         .mybtns > button {
             margin-right: 10px;
         }
-
-        .modal_overlay {
-            width: 100%;
-            height: 100%;
-            position: fixed;
-            left: 0;
-            top: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 100;
-        }
-
-        .modal_window {
-            background: white;
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            width: 600px;
-            height: 400px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 10px;
-        }
     </style>
 
     <script>
@@ -179,9 +147,9 @@
             })
         }
 
-        $(document).ready(function () {
-            listing();
-        });
+            $(document).ready(function (){
+                listing();
+            });
 
         function listing() {
             $.ajax({
@@ -190,26 +158,23 @@
                 data: {},
                 success: function (response) {
                     let rows = response['reviews']
-                    for (let i = 0; i < rows.length; i++) {
+                    for(let i = 0; i < rows.length; i++) {
                         let title = rows[i]['title']
                         let loc = rows[i]['loc']
                         let star = rows[i]['star']
                         let review = rows[i]['review']
                         let file = rows[i]['img_file']
-                        let num = rows[i]['num']
 
                         let star_image = '⭐'.repeat(star)
 
                         let temp_html = `<div class="col">
                                             <div class="card h-100">
-                                              <img class="is-rounded" src="/static/upload/${file}">
+                                     <img class="is-rounded" src="/static/upload/${file}">
                                                 <div class="card-body">
                                                     <h5 class="card-title">${title}</h5>
                                                     <p class="card-text">${loc}</p>
                                                     <p>${star_image}</p>
                                                     <p class="mycomment">${review}</p>
-                                                    <p>#${num}</p>
-                                                    <button onclick="open_modal(${num})" type="button" class="btn btn-outline-dark">수정하기</button>
                                                 </div>
                                             </div>
                                         </div>`
@@ -218,7 +183,6 @@
                 }
             })
          }
-      }
 
         function sign_out() {
             $.removeCookie('mytoken', {path: '/'});
@@ -231,32 +195,6 @@
             })
         }
 
-        {#모달창 닫기#}
-        function close_modal() {
-            $('.modal-box').hide()
-        }
-        {#모달창 열고 해당번호 클래스에 추가#}
-        function open_modal(num) {
-            $('.modal-box').show()
-            $('.modal-box').addClass(`${num}`)
-        }
-        {#클래스에 있는 번호 추출 및 서버에 넘기기#}
-        function update_modal() {
-            let num = $('.modal-box').attr('class').split(' ')[1]
-            let title = $('#title_update').val()
-            let loc = $('#loc_update').val()
-            let star = $('#star_update').val()
-            let review = $('#review_update').val()
-            $.ajax({
-                type: "POST",
-                url: "/main/post/update",
-                data: {num_give:num, title_give: title, loc_give: loc, star_give: star, review_give: review},
-                success: function (response) {
-                    alert(response["msg"])
-                    window.location.reload()
-                }
-            });
-        }
 
     </script>
 </head>
@@ -264,11 +202,8 @@
 <body>
 <!-- 윗 배너 -->
 <div class="mytitle">
-
     <button class="logout_btn" onclick="sign_out()">로그아웃</button>
-
     <img src="/static/logo.png">
-    <!--    <button onclick="open_box()">내가 다녀온 글램핑<p>리뷰 쓰기</p></button>-->
 </div>
 
 <!-- 슬라이드 배너 -->
@@ -279,16 +214,13 @@
                     aria-current="true"></button>
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"
                     class=""></button>
-            <!--      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>-->
         </div>
         <div class="carousel-inner">
 
             <!-- carousel 첫번째 배너 -->
             <div class="carousel-item active">
-                <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg"
-                     aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                    <rect width="100%" height="100%" fill="#777"></rect>
-                </svg>
+                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fnaverbooking-phinf.pstatic.net%2F20220223_186%2F1645542079436RXQJs_JPEG%2Fimage.jpg"
+                     alt="" width="100%" height="300px">
                 <div class="container">
                     <div class="carousel-caption text-start">
                         <div class="btn1">
@@ -300,10 +232,8 @@
 
             <!-- carousel 두번째 배너 -->
             <div class="carousel-item">
-                <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg"
-                     aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                    <rect width="100%" height="100%" fill="#777"></rect>
-                </svg>
+                <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMjAyMjRfMTM5%2FMDAxNjQ1NjI5NzAzOTY1.fifyZ8lFn7Syk2TxMFAM3G-PxUsZ-jnDpVH4uCF594cg.w00-CqVx8F-JqXT5MjvtNBFZtU-y78HEb0KCx1be4n4g.JPEG.jaeeun120454%2F7BD65E2A-598D-4D28-A551-9CA4816B0952.jpeg&type=sc960_832"
+                     alt="" width="100%" height="300px">
                 <div class="container">
                     <div class="carousel-caption text-end">
                         <p><a class="btn btn-lg btn-success" href="/top10">인기 글램핑 명소 보기</a></p>
@@ -311,18 +241,6 @@
                 </div>
             </div>
 
-            <!-- carousel 세번째 배너 -->
-            <!--        <div class="carousel-item">-->
-            <!--            <svg class="bd-placeholder-img" width="100%" height="300px" xmlns="http://www.w3.org/2000/svg"-->
-            <!--                 aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">-->
-            <!--                <rect width="100%" height="100%" fill="#777"></rect>-->
-            <!--            </svg>-->
-            <!--            <div class="container">-->
-            <!--                <div class="carousel-caption text-end">-->
-            <!--                    <p><a class="btn btn-lg btn-light" href="#">홈으로</a></p>-->
-            <!--                </div>-->
-            <!--            </div>-->
-            <!--      </div>-->
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -335,44 +253,39 @@
     </div>
 </div>
 
-<!-- 리뷰 등록 창 (임시) -->
+<!-- 리뷰 등록 창 -->
 <div class="review_post" id="review-box">
     <div class="form-floating mb-3">
         <div class="mb-3">
-        <label for="formGroupExampleInput" class="form-label">글램핑장 이름</label>
-        <input id="title" type="email" class="form-control" placeholder="ex)Goo_글램핑">
+            <label for="formGroupExampleInput" class="form-label">글램핑장 이름</label>
+            <input id="title" type="email" class="form-control" placeholder="ex)Goo_글램핑">
         </div>
         <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">글램핑장 주소</label>
-        <input id="loc" type="email" class="form-control" placeholder="ex)서울 은평구 북한산로 242 ">
-            </div>
+            <input id="loc" type="email" class="form-control" placeholder="ex)서울 은평구 북한산로 242 ">
+        </div>
 
         <div class="input-group mb-3">
-        <label class="input-group-text" for="inputGroupSelect01">별점</label>
-        <select class="form-select" id="star">
-            <option selected>-- 선택하기 --</option>
-            <option value="1">⭐</option>
-            <option value="2">⭐⭐</option>
-            <option value="3">⭐⭐⭐</option>
-            <option value="4">⭐⭐⭐⭐</option>
-            <option value="5">⭐⭐⭐⭐⭐</option>
-        </select>
-    </div>
-        <div class="mb-3">
-            <label for="formFile" class="form-label">사진 첨부</label>
-            <input class="form-control" type="file" id="formFile">
+            <label class="input-group-text" for="inputGroupSelect01">별점</label>
+            <select class="form-select" id="star">
+                <option selected>-- 선택하기 --</option>
+                <option value="1">⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="5">⭐⭐⭐⭐⭐</option>
+            </select>
         </div>
     </div>
-    <input id="input-pic" class="file-input" type="file" name="resume">
-                                                        <span class="file-cta"><span class="file-icon"><i
-                                                                class="fa fa-upload"></i></span>
-                                                    <span class="file-label">파일 선택</span>
-                                                </span>
     <div class="form-floating">
         <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">리뷰란</label>
-        <textarea id="review" class="form-control" placeholder="자유롭게 리뷰를 써주세요!"></textarea>
-    </div>
+            <textarea id="review" class="form-control" placeholder="자유롭게 리뷰를 써주세요!"></textarea>
+        </div>
+        <input id="input-pic" class="file-input" type="file" name="resume">
+        <span class="file-cta">
+        <span class="file-icon"><i class="fa fa-upload"></i></span>
+    </span>
     </div>
     <div class="mybtns">
         <button onclick="posting()" type="button" class="btn btn-dark">등록하기</button>
@@ -380,103 +293,11 @@
     </div>
 </div>
 
-<div class="modal-box" style="display: none">
-    <div class="modal_overlay" id="modal-window">
-        <div class="modal_window">
-            <div class="form-floating mb-3">
-                <input id="title_update" type="email" class="form-control" placeholder="글램핑장명">
-                <label>글램핑 장소명</label>
-                <input id="loc_update" type="email" class="form-control" placeholder="주소명">
-            </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="inputGroupSelect01">별점</label>
-                <select class="form-select" id="star_update">
-                    <option selected>-- 선택하기 --</option>
-                    <option value="1">⭐</option>
-                    <option value="2">⭐⭐</option>
-                    <option value="3">⭐⭐⭐</option>
-                    <option value="4">⭐⭐⭐⭐</option>
-                    <option value="5">⭐⭐⭐⭐⭐</option>
-                </select>
-            </div>
-            <div class="form-floating">
-                <textarea id="review_update" class="form-control" placeholder="Leave a comment here"></textarea>
-                <label for="floatingTextarea2">자유롭게 리뷰를 써주세요!</label>
-            </div>
-            <div class="mybtns">
-                <button onclick="update_modal()" type="button" class="btn btn-dark">수정하기</button>
-                <button onclick="close_modal()" type="button" class="btn btn-outline-dark">닫기</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- 리뷰 리스트 -->
-<div class="mycards">
-    <div class="row row-cols-1 row-cols-md-3 g-4" id="cards-box">
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20200317_145%2F1584439135113Kw1i5_JPEG%2F9EWR-H8oor6T-bS7gjAped-B.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">캠핑장 장소명</h5>
-                    <p class="card-text">주소</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">리뷰 내용</p>
-                    <p>#1</p>
-                    <button onclick="open_modal()" type="button" class="btn btn-outline-dark">수정하기</button>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20210224_121%2F1614138839456YPUDl_JPEG%2FmXErGPgsbMbn-SSylOnwIGJP.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">캠핑장 장소명</h5>
-                    <p class="card-text">주소</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">리뷰 내용</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220209_10%2F1644414196880GilRo_JPEG%2FKakaoTalk_20220209_223055526.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">캠핑장 장소명</h5>
-                    <p class="card-text">주소</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">리뷰 내용</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20220209_10%2F1644414196880GilRo_JPEG%2FKakaoTalk_20220209_223055526.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">캠핑장 장소명</h5>
-                    <p class="card-text">주소</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">리뷰 내용</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://search.pstatic.net/common/?autoRotate=true&quality=95&type=w750&src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20200317_145%2F1584439135113Kw1i5_JPEG%2F9EWR-H8oor6T-bS7gjAped-B.jpg"
-                     class="card-img-top">
-                <div class="card-body">
-                    <h5 class="card-title">캠핑장 장소명</h5>
-                    <p class="card-text">주소</p>
-                    <p>⭐⭐⭐</p>
-                    <p class="mycomment">리뷰 내용</p>
-                </div>
-            </div>
+    <div class="mycards">
+        <div class="row row-cols-1 row-cols-md-3 g-4" id="cards-box">
+
         </div>
     </div>
-</div>
 </body>
 </html>
