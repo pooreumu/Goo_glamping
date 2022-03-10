@@ -103,6 +103,33 @@
         .mybtns > button {
             margin-right: 10px;
         }
+
+        .modal_overlay {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+        }
+
+        .modal_window {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            width: 600px;
+            height: 400px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 10px;
+        }
     </style>
 
     <script>
@@ -195,6 +222,32 @@
             }).then(function () {
                 location.href = '/'
             })
+        }
+        // {#모달창 닫기#}
+        function close_modal() {
+            $('.modal-box').hide()
+        }
+        // {#모달창 열고 해당번호 클래스에 추가#}
+        function open_modal(num) {
+            $('.modal-box').show()
+            $('.modal-box').addClass(`${num}`)
+        }
+        // {#클래스에 있는 번호 추출 및 서버에 넘기기#}
+        function update_modal() {
+            let num = $('.modal-box').attr('class').split(' ')[1]
+            let title = $('#title_update').val()
+            let loc = $('#loc_update').val()
+            let star = $('#star_update').val()
+            let review = $('#review_update').val()
+            $.ajax({
+                type: "POST",
+                url: "/main/post/update",
+                data: {num_give:num, title_give: title, loc_give: loc, star_give: star, review_give: review},
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
         }
 
 
@@ -292,6 +345,36 @@
     <div class="mybtns">
         <button onclick="posting()" type="button" class="btn btn-dark">등록하기</button>
         <button onclick="close_box()" type="button" class="btn btn-outline-dark">닫기</button>
+    </div>
+</div>
+<div class="modal-box" style="display: none">
+    <div class="modal_overlay" id="modal-window">
+        <div class="modal_window">
+            <div class="form-floating mb-3">
+                <input id="title_update" type="email" class="form-control" placeholder="글램핑장명">
+                <label>글램핑 장소명</label>
+                <input id="loc_update" type="email" class="form-control" placeholder="주소명">
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">별점</label>
+                <select class="form-select" id="star_update">
+                    <option selected>-- 선택하기 --</option>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+            </div>
+            <div class="form-floating">
+                <textarea id="review_update" class="form-control" placeholder="Leave a comment here"></textarea>
+                <label for="floatingTextarea2">자유롭게 리뷰를 써주세요!</label>
+            </div>
+            <div class="mybtns">
+                <button onclick="update_modal()" type="button" class="btn btn-dark">수정하기</button>
+                <button onclick="close_modal()" type="button" class="btn btn-outline-dark">닫기</button>
+            </div>
+        </div>
     </div>
 </div>
 
