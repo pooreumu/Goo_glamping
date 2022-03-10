@@ -94,10 +94,10 @@ def review_post():
     review_receive = request.form['review_give']
 
 
-    # if 'file_give' in request.files:
-    file = request.files["file_give"]
-    filename = secure_filename(file.filename)
-    file.save("./static/upload/"+filename)
+    if 'file_give' in request.files:
+        file = request.files["file_give"]
+        filename = secure_filename(file.filename)
+        file.save("./static/upload/"+filename)
 
     reviews_list = list(db.reviews.find({}, {'_id': False}))
     count = len(reviews_list) + 1
