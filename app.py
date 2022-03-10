@@ -8,11 +8,8 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
-client = MongoClient('mongodb+srv://test:sparta@cluster0.ywgct.mongodb.net/myFirstDatabase?retryWrites=true&w=majority')
-db = client.hanghae99
-
-# client = MongoClient(config.Mongo_key)
-# db = client.dbsparta
+client = MongoClient(config.Mongo_key)
+db = client.dbsparta
 
 SECRET_KEY = config.SECRET_KEY
 
@@ -93,11 +90,10 @@ def review_post():
     star_receive = request.form['star_give']
     review_receive = request.form['review_give']
 
-
-    # if 'file_give' in request.files:
-    file = request.files["file_give"]
-    filename = secure_filename(file.filename)
-    file.save("./static/upload/"+filename)
+    if 'file_give' in request.files:
+        file = request.files["file_give"]
+        filename = secure_filename(file.filename)
+        file.save("./static/upload/"+filename)
 
     reviews_list = list(db.reviews.find({}, {'_id': False}))
     count = len(reviews_list) + 1
