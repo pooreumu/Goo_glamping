@@ -383,25 +383,32 @@
     <div class="modal_overlay" id="modal-window">
         <div class="modal_window">
             <div class="form-floating mb-3">
-                <input id="title_update" type="email" class="form-control" placeholder="글램핑장명">
-                <label>글램핑 장소명</label>
-                <input id="loc_update" type="email" class="form-control" placeholder="주소명">
-            </div>
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="inputGroupSelect01">별점</label>
-                <select class="form-select" id="star_update">
-                    <option selected>-- 선택하기 --</option>
-                    <option value="1">⭐</option>
-                    <option value="2">⭐⭐</option>
-                    <option value="3">⭐⭐⭐</option>
-                    <option value="4">⭐⭐⭐⭐</option>
-                    <option value="5">⭐⭐⭐⭐⭐</option>
-                </select>
+                <div class="mb-3">
+                    <label for="formGroupExampleInput" class="form-label">글램핑장 이름</label>
+                    <input id="title" type="email" class="form-control" placeholder="ex)Goo_글램핑">
+                </div>
+                <div class="mb-3">
+                    <label for="formGroupExampleInput" class="form-label">글램핑장 주소</label>
+                    <input id="loc" type="email" class="form-control" placeholder="ex)서울 은평구 북한산로 242 ">
+                </div>
+
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">별점</label>
+                    <select class="form-select" id="star">
+                        <option selected>-- 선택하기 --</option>
+                        <option value="1">⭐</option>
+                        <option value="2">⭐⭐</option>
+                        <option value="3">⭐⭐⭐</option>
+                        <option value="4">⭐⭐⭐⭐</option>
+                        <option value="5">⭐⭐⭐⭐⭐</option>
+                    </select>
+                </div>
             </div>
             <div class="form-floating">
-                <textarea id="review_update" class="form-control" placeholder="Leave a comment here"></textarea>
-                <label for="floatingTextarea2">자유롭게 리뷰를 써주세요!</label>
-            </div>
+                <div class="mb-3">
+                    <label for="formGroupExampleInput" class="form-label">리뷰란</label>
+                    <textarea id="review" class="form-control" placeholder="자유롭게 리뷰를 써주세요!"></textarea>
+                </div>
             <div class="mybtns">
                 <button onclick="update_modal()" type="button" class="btn btn-dark">수정하기</button>
                 <button onclick="close_modal()" type="button" class="btn btn-outline-dark">닫기</button>
